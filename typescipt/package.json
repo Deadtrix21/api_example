@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch build build/index.js"
+    "compile": "npx tsc",
+    "dev-server": "nodemon --watch build build/index.js",
+    "prod" : "npm run compile && node build/index.js"
   },
   "author": "",
   "license": "ISC",
