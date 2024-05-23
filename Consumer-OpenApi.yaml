@@ -1,0 +1,2454 @@
+openapi: 3.0.1
+info:
+  title: Consumer Verification API Documentation
+  version: 1.0.0
+  description: |
+    ## Getting started with REST API
+    - The Datanamix REST API is used by developers to integrate with our various credit bureau services, as well as our other services, like KYC and ID verification.
+
+    - The API is built for reliability and speed. Datanamix processes millions of API calls per month for thousands of customers, banks, and insurers.
+
+    - Once approved, you will receive access to our API Manager and Swagger tools.
+
+    ### Getting Access
+    - To access our API systems, you need to first apply for an API account. You have the option of a prepaid account, or you can apply for a 30-day account.
+
+    - Please click on the button below to send us your details. A consultant will get back to you within one business day with the steps you need to follow.
+
+    - [Apply for API Access](\"https://datanamixdev.wpengine.com/contact/\")
+
+    ### API Manager
+    - Once approved, your API account details, instructions on what to do next, and user credentials will be communicated to you.
+
+    - Use your user credentials to access the API Manager here: [API Manager](\"https://veriid.com/API_Manager/")
+
+    - This is where you will be able to view your monthly usage, draw reports and access your credit balance.
+
+    ### Need our help?
+
+    - Should you need any technical assistance with our API, please log a support ticket here: [Support Ticket](\"https://pbverify.freshdesk.com/support/tickets/new/\")
+    - We also offer software development and integration services. Please log a ticket above with your requirements, and a support agent will contact you.
+    - Phone: +27 (0) 10 823 5194
+    - E-mail: support@datanamix.com
+
+    ```
+    Datanamix is a registered Credit Bureau in terms of section 43 of the National Credit Act 34 of 2005. 
+    Its data-systems, data-security and data-processing protocols are audited annually in accordance with the NCA. 
+    ```
+      
+  termsOfService: 'https://www.datanamix.com/legal/terms-conditions/'
+  contact:
+    name: Support
+    url: 'https://www.datanamix.com/'
+    email: support@datanamix.com
+  license:
+    name: Proprietary License
+    url: 'https://www.datanamix.com/legal/terms-conditions/'
+servers:
+  - url: 'https://veriid.com/PBVerify/webservice'
+tags:
+  - name: Home Affairs ID Verification
+  - name: Family Lineage
+  - name: Authentication Questions
+  - name: Proof of Live - 3D Facial
+  - name: Bank Account Verification
+  - name: Address Verification
+  - name: Know Your Customer (KYC)
+  - name: Consumer Credit Reports
+  - name: Express Credit Score
+  - name: Affordability
+  - name: Contact to ID Number
+  - name: 'Phone ID, Score and SIM Swap'
+  - name: AML Sanctions and PEP
+paths:
+  /pbverify-profile-id-verification:
+    post:
+      tags:
+        - Home Affairs ID Verification
+      summary: Offline ID verification
+      description: 'The Datanamix Offline ID Verification API serves as a crucial tool for validating 13-digit South African ID numbers by tapping into Credit Bureau hosted consumer Identity services. These services are directly linked to the Department of Home Affairs (DHA) ID database, ensuring access to accurate and up-to-date identity information. One key advantage of this API is its capability to perform identity checks offline, particularly useful during instances of downtime experienced by the Department of Home Affairs (DHA).'
+      operationId: profileIdVerification
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 digit ID Number
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                  idProfile:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      idNumber:
+                        type: string
+                      firstNames:
+                        type: string
+                      surName:
+                        type: string
+                      dob:
+                        type: string
+                      age:
+                        type: integer
+                      gender:
+                        type: string
+                      citizenship:
+                        type: string
+                      status:
+                        type: integer
+                      dateOfIssue:
+                        type: string
+                      deathDate:
+                        type: string
+                      deathPlace:
+                        type: string
+                x-examples:
+                  Example 1:
+                    Status: Success
+                    idProfile:
+                      traceId: '10286383'
+                      idNumber: '8307065125487'
+                      firstNames: JUST
+                      surName: GOOFY
+                      dob: '1983-07-06'
+                      age: 34
+                      gender: Male
+                      citizenship: South African
+                      status: 1
+                      dateOfIssue: '2001-11-13T00:00:00+02:00'
+                      deathDate: '2001-11-13T00:00:00+02:00'
+                      deathPlace: Your moms house
+              examples:
+                Example 1:
+                  value:
+                    Status: Success
+                    idProfile:
+                      traceId: '10286383'
+                      idNumber: '8307065125487'
+                      firstNames: JUST
+                      surName: GOOFY
+                      dob: '1983-07-06'
+                      age: 34
+                      gender: Male
+                      citizenship: South African
+                      status: 1
+                      dateOfIssue: '2001-11-13T00:00:00+02:00'
+                      deathDate: '2001-11-13T00:00:00+02:00'
+                      deathPlace: ''
+      x-stoplight:
+        id: 6d4we9u8f4szr
+  /pbverify-real-time-id-verification:
+    post:
+      tags:
+        - Home Affairs ID Verification
+      summary: Realtime ID Verification
+      description: 'The Datanamix Realtime ID Verification API is specifically designed to cater to technical users, offering seamless validation of 13-digit ID numbers by conducting live checks against the Department of Home Affairs (DHA) database. This database stands as the singular authoritative source for South African consumer identity data, ensuring compliance and accuracy in Know Your Customer (KYC) verification processes. By tapping directly into the DHA database, this API provides realtime validation, minimising latency and enhancing the efficiency of identity verification procedures. Its utilisation of the DHA dataset as the golden source of identity data adds a layer of reliability and regulatory adherence to the verification process, which is crucial for businesses operating within South Africa''s compliance framework. The data is accessed via the NPR database, which includes information such as ID document type (Smart Card/ Green ID book). Marital status, Martial date, Country of birth, ID Blocked status, Deceased/Alive status/ deceased date/place and reason. '
+      operationId: realTimeIdVerification
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 digit ID Number
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                  realTimeResults:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      idNumber:
+                        type: string
+                      haIdno:
+                        type: string
+                      idnoMatchStatus:
+                        type: string
+                      iDBookIssuedDate:
+                        type: string
+                      identityDocumentType:
+                        type: string
+                      idCardInd:
+                        type: string
+                      idCardDate:
+                        type: string
+                      idBlocked:
+                        type: string
+                      firstNames:
+                        type: string
+                      surName:
+                        type: string
+                      dob:
+                        type: string
+                      age:
+                        type: integer
+                      gender:
+                        type: string
+                      citizenship:
+                        type: string
+                      countryofBirth:
+                        type: string
+                      deceasedStatus:
+                        type: string
+                      deceasedDate:
+                        type: string
+                      deathPlace:
+                        type: string
+                      causeOfDeath:
+                        type: string
+                      maritalStatus:
+                        type: string
+                      marriageDate:
+                        type: string
+                x-examples:
+                  Example 1:
+                    Status: Success
+                    realTimeResults:
+                      traceId: '23408771'
+                      idNumber: '4907197875465'
+                      haIdno: '4907197875465'
+                      idnoMatchStatus: Matched
+                      iDBookIssuedDate: '1994-08-01'
+                      identityDocumentType: ID Book
+                      idCardInd: 'No'
+                      idCardDate: ''
+                      idBlocked: ''
+                      firstNames: JOHN
+                      surName: DOE
+                      dob: '1949-07-18'
+                      age: 72
+                      gender: Male
+                      citizenship: South African
+                      countryofBirth: ENGLAND
+                      deceasedStatus: Deceased
+                      deceasedDate: '1999-12-16'
+                      deathPlace: FAR FAR AWAY
+                      causeOfDeath: NATURAL CAUSES
+                      maritalStatus: MARRIED
+                      marriageDate: '1970-08-22'
+              examples:
+                Example 1:
+                  value:
+                    Status: Success
+                    realTimeResults:
+                      traceId: '23408771'
+                      idNumber: '4907197875465'
+                      haIdno: '4907197875465'
+                      idnoMatchStatus: Matched
+                      iDBookIssuedDate: '1994-08-01'
+                      identityDocumentType: ID Book
+                      idCardInd: 'No'
+                      idCardDate: ''
+                      idBlocked: ''
+                      firstNames: JOHN
+                      surName: DOE
+                      dob: '1949-07-18'
+                      age: 72
+                      gender: Male
+                      citizenship: South African
+                      countryofBirth: ENGLAND
+                      deceasedStatus: Deceased
+                      deceasedDate: '1999-12-16'
+                      deathPlace: FAR FAR AWAY
+                      causeOfDeath: NATURAL CAUSES
+                      maritalStatus: MARRIED
+                      marriageDate: '1970-08-22'
+      x-stoplight:
+        id: 2sr4ds8m5qufq
+      x-extension-1: null
+  /pbverify-idv-photo:
+    post:
+      tags:
+        - Home Affairs ID Verification
+      summary: Realtime ID Photo
+      description: 'The Datanamix Realtime ID Photo retrieval API is a powerful tool tailored for technical users, offering the capability to authenticate 13-digit South African Home Affairs ID numbers and retrieve the corresponding Biometric ID photo stored within the DHA database. This API provides a seamless solution for qualifying businesses, enabling them to integrate identity validation processes into their systems seamlessly. Users can retrieve crucial information, including their full name, ID number, age, date of birth, and deceased/alive status, alongside the biometric ID photo, by leveraging direct access to the DHA database. Including the Biometric ID photo enhances the verification process, adding an extra layer of authentication and security. Moreover, the API''s ability to return essential information in real-time ensures efficient and accurate identity validation procedures for technical environments.'
+      operationId: IdvPhoto
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 digit ID Number
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                  IDPhotoResults:
+                    type: object
+                    properties:
+                      idNumber:
+                        type: string
+                      firstNames:
+                        type: string
+                      surName:
+                        type: string
+                      deceasedStatus:
+                        type: string
+                      IDPhoto:
+                        type: string
+                x-examples:
+                  Example 1:
+                    Status: Success
+                    IDPhotoResults:
+                      idNumber: '8404191122334'
+                      firstNames: JOHN
+                      surName: DOE
+                      deceasedStatus: Alive
+                      IDPhoto: iVBORw0KGgoAAAANSUhEUgAAAh8AAAK5CAIAAACQett1AAAABmJLR0Q...
+              examples:
+                Example 1:
+                  value:
+                    Status: Success
+                    IDPhotoResults:
+                      idNumber: '8404191122334'
+                      firstNames: JOHN
+                      surName: DOE
+                      deceasedStatus: Alive
+                      IDPhoto: iVBORw0KGgoAAAANSUhEUgAAAh8AAAK5CAIAAACQett1AAAABmJLR0Q...
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@datanamix.com'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  IDPhotoResults:
+                    idNumber: ''
+                    firstNames: ''
+                    surName: ''
+                    deceasedStatus: ''
+                    IDPhoto: A relevant response message
+      x-stoplight:
+        id: d343nvpt6vvtw
+  /pbverify-bio-idv:
+    post:
+      tags:
+        - Home Affairs ID Verification
+      summary: Realtime Fingerprint Bio
+      description: 'The Datanamix Biometric Fingerprint verification API verifies fingerprints and ID numbers associated with valid 13-digit South African ID numbers, as well as matches the photo on the ID document with the Department of Home Affairs Database. Both left and right thumbprints must be captured using a certified fingerprint-capturing device to use the system. Once these thumbprints, along with the 13-digit ID number and the name details of the South African citizen, are verified, the API compares them with the information in the Department of Home Affairs database. If there is a match, the system verifies the details and, if available, displays the ID photo. If the fingerprints do not match the ID number, the system indicates this and outputs the associated details for comparison. For more detailed instructions on utilising this service, please refer to the Extended Documentation.'
+      operationId: bioMetricIdv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[firstname]'
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[leftThumb]'
+                - 'consumer_details[rightThumb]'
+                - 'consumer_details[surname]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 digit ID Number
+                'consumer_details[firstname]':
+                  type: string
+                  description: Consumers First names
+                'consumer_details[surname]':
+                  type: string
+                  description: Consumers Surname
+                'consumer_details[leftThumb]':
+                  type: string
+                  description: Consumers left thumb fringerprint - 512x512 wsq format - base64 encoded
+                'consumer_details[rightThumb]':
+                  type: string
+                  description: Consumers right thumb fringerprint - 512x512 wsq format - base64 encoded
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                  BioMetric_Response:
+                    type: object
+                    properties:
+                      ReportInformation:
+                        type: object
+                        properties:
+                          ReportID:
+                            type: string
+                          ReportName:
+                            type: string
+                      ConsumerDetail:
+                        type: object
+                        properties:
+                          DisplayText:
+                            type: string
+                          ConsumerID:
+                            type: string
+                          Initials:
+                            type: string
+                          FirstName:
+                            type: string
+                          SecondName:
+                            type: string
+                          Surname:
+                            type: string
+                          IDNo:
+                            type: string
+                          BirthDate:
+                            type: string
+                          Gender:
+                            type: string
+                          TitleDesc:
+                            type: string
+                          ReferenceNo:
+                            type: string
+                          ExternalReference:
+                            type: string
+                          XDSDeceasedStatus:
+                            type: string
+                      ConsumerIdentityVerification:
+                        type: object
+                        properties:
+                          DisplayText:
+                            type: string
+                          IDNo:
+                            type: string
+                          XDSDeceasedStatus:
+                            type: string
+                          HomeAffairsFirstName:
+                            type: string
+                          HomeAffairsSurname:
+                            type: string
+                          HomeAffairsDeceasedStatus:
+                            type: string
+                      BioMetricVerificationResult:
+                        type: object
+                        properties:
+                          FingerColor:
+                            type: string
+                          HasImage:
+                            type: string
+                          TmStamp:
+                            type: string
+                          TransactionNumber:
+                            type: string
+                          VerificationResult:
+                            type: string
+                          VerificationResultDescription:
+                            type: string
+                          SubscriberEnquiryID:
+                            type: string
+                          SubscriberEnquiryResultID:
+                            type: string
+                          IDPhoto:
+                            type: string
+                      SubscriberInputDetails:
+                        type: object
+                        properties:
+                          EnquiryDate:
+                            type: string
+                          EnquiryType:
+                            type: string
+                          SubscriberName:
+                            type: string
+                          SubscriberUserName:
+                            type: string
+                          EnquiryInput:
+                            type: string
+                x-examples:
+                  Example 1:
+                    Status: Success
+                    BioMetric_Response:
+                      ReportInformation:
+                        ReportID: '114'
+                        ReportName: ID BioMetric verification Report
+                      ConsumerDetail:
+                        DisplayText: Consumer Detail
+                        ConsumerID: '3819777'
+                        Initials: IH
+                        FirstName: JUST
+                        SecondName: ''
+                        Surname: GOOFY
+                        IDNo: '790501467895'
+                        BirthDate: '1979-05-01'
+                        Gender: Male
+                        TitleDesc: Mister
+                        ReferenceNo: H53351146-28113283
+                        ExternalReference: Bio Verification
+                        XDSDeceasedStatus: Active
+                      ConsumerIdentityVerification:
+                        DisplayText: Consumer Identity Verification
+                        IDNo: '790501467895'
+                        XDSDeceasedStatus: Active
+                        HomeAffairsFirstName: JUST
+                        HomeAffairsSurname: GOOFY
+                        HomeAffairsDeceasedStatus: Active
+                      BioMetricVerificationResult:
+                        FingerColor: Red
+                        HasImage: 'True'
+                        TmStamp: '2018/01/03 02:43:53 PM'
+                        TransactionNumber: '29215'
+                        VerificationResult: Unverified_Finger_Prints
+                        VerificationResultDescription: Fingerprints Do Not Match with ID Number
+                        SubscriberEnquiryID: '53351146'
+                        SubscriberEnquiryResultID: '54005500'
+                        IDPhoto: base64 string of jpg
+                      SubscriberInputDetails:
+                        EnquiryDate: '2018-01-03T14:43:53.7162495+02:00'
+                        EnquiryType: ID BioMetric verification
+                        SubscriberName: 'Pitney Bowes '
+                        SubscriberUserName: Pitney  Bowes
+                        EnquiryInput: 7504105030088 | GOOFY
+              examples:
+                Example 1:
+                  value:
+                    Status: Success
+                    BioMetric_Response:
+                      ReportInformation:
+                        ReportID: '114'
+                        ReportName: ID BioMetric verification Report
+                      ConsumerDetail:
+                        DisplayText: Consumer Detail
+                        ConsumerID: '3819777'
+                        Initials: IH
+                        FirstName: JUST
+                        SecondName: ''
+                        Surname: GOOFY
+                        IDNo: '790501467895'
+                        BirthDate: '1979-05-01'
+                        Gender: Male
+                        TitleDesc: Mister
+                        ReferenceNo: H53351146-28113283
+                        ExternalReference: Bio Verification
+                        XDSDeceasedStatus: Active
+                      ConsumerIdentityVerification:
+                        DisplayText: Consumer Identity Verification
+                        IDNo: '790501467895'
+                        XDSDeceasedStatus: Active
+                        HomeAffairsFirstName: JUST
+                        HomeAffairsSurname: GOOFY
+                        HomeAffairsDeceasedStatus: Active
+                      BioMetricVerificationResult:
+                        FingerColor: Red
+                        HasImage: 'True'
+                        TmStamp: '2018/01/03 02:43:53 PM'
+                        TransactionNumber: '29215'
+                        VerificationResult: Unverified_Finger_Prints
+                        VerificationResultDescription: Fingerprints Do Not Match with ID Number
+                        SubscriberEnquiryID: '53351146'
+                        SubscriberEnquiryResultID: '54005500'
+                        IDPhoto: base64 string of jpg
+                      SubscriberInputDetails:
+                        EnquiryDate: '2018-01-03T14:43:53.7162495+02:00'
+                        EnquiryType: ID BioMetric verification
+                        SubscriberName: 'Pitney Bowes '
+                        SubscriberUserName: Pitney  Bowes
+                        EnquiryInput: 7504105030088 | GOOFY
+      x-stoplight:
+        id: knnpmrve3jqoo
+  /id-scan-to-hanis-verification:
+    post:
+      tags:
+        - Home Affairs ID Verification
+      summary: ID Scan To HANIS Verification
+      description: 'Transmit an image of an ID document featuring a South African ID Number for validation against Home Affairs data. Following this, the submitted image will undergo facial recognition processing against the corresponding image within the Home Affairs database and return a match result. '
+      operationId: id-scan-to-hanis-verification
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - captureImage
+                - idNumber
+                - memberkey
+                - password
+                - yourReference
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: Consumers 13 digit ID Number
+                captureImage:
+                  type: string
+                  description: base64 encoded string of image captured
+                yourReference:
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                  Result:
+                    type: object
+                    properties:
+                      ResponseStatusCode:
+                        type: integer
+                      ResponseMessage:
+                        type: string
+                      InputIdNumber:
+                        type: integer
+                      MatchScore:
+                        type: integer
+                      HanisName:
+                        type: string
+                      HanisSurname:
+                        type: string
+                      HanisDeceasedStatus:
+                        type: string
+                      HanisIdCardIndicator:
+                        type: string
+                      HanisIdCardDate:
+                        type: string
+                  Error:
+                    type: string
+                x-examples:
+                  Example 1:
+                    Status: Success
+                    Result:
+                      ResponseStatusCode: 0
+                      ResponseMessage: Face Match Successful
+                      InputIdNumber: 8501015500081
+                      MatchScore: 81
+                      HanisName: Joe
+                      HanisSurname: Soap
+                      HanisDeceasedStatus: Alive
+                      HanisIdCardIndicator: 'Yes'
+                      HanisIdCardDate: '2015-03-18'
+                    Error: ''
+              examples:
+                Example 1:
+                  value:
+                    Status: Success
+                    Result:
+                      ResponseStatusCode: 0
+                      ResponseMessage: Face Match Successful
+                      InputIdNumber: 8501015500081
+                      MatchScore: 81
+                      HanisName: Joe
+                      HanisSurname: Soap
+                      HanisDeceasedStatus: Alive
+                      HanisIdCardIndicator: 'Yes'
+                      HanisIdCardDate: '2015-03-18'
+                    Error: ''
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@datanamix.com'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Result:
+                    ResponseStatusCode: 2
+                    ResponseMessage: A relevant message explaining the error
+                    InputIdNumber: '8501015500081'
+                    MatchScore: 0
+                    HanisName: ''
+                    HanisSurname: ''
+                    HanisDeceasedStatus: ''
+                    HanisIdCardIndicator: ''
+                    HanisIdCardDate: ''
+                  Error: ''
+      x-stoplight:
+        id: ga66181jeobx9
+  /realtime-idv-facial-to-hanis:
+    post:
+      tags:
+        - Home Affairs ID Verification
+      summary: Verify Photo To HANIS
+      description: Send a captured image with a SA ID Number which will be verified against Realtime Home Affairs data and then the captured image will be processed against the Home Affairs image with a facial recognition
+      operationId: zoom-realtime-facial-to-hanis
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - captureImage
+                - idNumber
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: Consumers 13 digit ID Number
+                captureImage:
+                  type: string
+                  description: base64 encoded string of image captured
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, realTimeResults={traceId=14365636, idNumber=9003265011000, firstNames=JOE JAMES, surName=SOAP, dob=1990-03-26, age=30, gender=Male, citizenship=South African, deceasedStatus=Alive, deceasedDate=}, FacialtoHanisMatch={MatchScore=59, ICAOStatus=success, ICAOGender=Male, ICAOAge=25, OriginalImage=/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJC...}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@datanamix.com'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+      x-stoplight:
+        id: mdjh1pd1mun0h
+  /datanamix-consumer-lineage:
+    post:
+      tags:
+        - Family Lineage
+      summary: Family Lineage
+      description: 'Access to the Datanamix Family Lineage API product necessitates explicit consent and adherence to legal guidelines, with permitted usage confined to fraud investigation and tracing beneficiaries for insurance and policy payouts. For further details and qualification criteria, please reach out to Datanamix directly. The service enables users to query an ID against the Department of Home Affairs (DHA) database, retrieving essential family details linked to the ID, such as the master ID, spouse, grandparents, and minor information. This includes address, contact, and employment data associated with each family member. Notably, access to minors'' ID photos is restricted in accordance with relevant legislation governing minor information access.'
+      operationId: DatanamixConsumerLineage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - idNumber
+                - memberkey
+                - password
+                - reference
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: 13-digit South African ID Number
+                reference:
+                  type: string
+                  description: Your search reference
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '{Status':
+                    type: string
+                x-examples:
+                  Example 1:
+                    '{Status': 'Success, Result={Consumers={Consumer=[{RealTimeIDV={InputIDNO=0000000000000, HAIDNO=0000000000000, IDNOMatchStatus=Matched, HANames=JOE JACKSON, HASurname=SOAP, HAGender=Male, HADateOfBirth=1990-01-19, HABirthPlace=SOUTH AFRICA, HADeceasedStatus=Alive, HADeceasedDate=, DeathPlace=, CauseOfDeath=, HAMarriageStatus=MARRIED, HAMarriageDate=2016-01-21, HAIDBookIssuedDate=2008-10-13, IdCardInd=Yes, HAIDCardDate=2016-11-21, HAIDSequenceNumber=, HAIDNumberBlocked=NO, HASpouseID=0000000000001, HAChild1ID=1700000000001, HAChild1Status=ALIVE, HAChild2ID=, HAChild2Status=, HAChild3ID=, HAChild3Status=, HAChild4ID=, HAChild4Status=, HAChild5ID=, HAChild5Status=, HAChild6ID=, HAChild6Status=, HAChild7ID=, HAChild7Status=, HAChild8ID=, HAChild8Status=, HAChild9ID=, HAChild9Status=, HAChild10ID=, HAChild10Status=, HAChild11ID=, HAChild11Status=, HAChild12ID=, HAChild12Status=, HAChild13ID=, HAChild13Status=, HAChild14ID=, HAChild14Status=, HAChild15ID=, HAChild15Status=, HAChild16ID=, HAChild16Status=, HAChild17ID=, HAChild17Status=, HAChild18ID=, HAChild18Status=, HAChild19ID=, HAChild19Status=, HAChild20ID=, HAChild20Status=, HAChild21ID=, HAChild21Status=, HAMotherID=0, HAFatherID=0, HAErrorDescription=}, Relationship={Relation=Master}, ConsumerEmailHistory={DisplayText=Consumer Email History, EmailAddress=joe@test.com, LastUpdatedDate=2014-11-30}, ConsumerAddressHistory=[{DisplayText=Consumer Address History, ConsumerAddressID=000000112, AddressType=Residential, AddressTypeInd=R, Address1=12 LONG RD, Address2=, Address3=, Address4=, PostalCode=2000, Address= 12 HOUSE RD 0000, LastUpdatedDate=2021-09-29, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Address History, ConsumerAddressID=000000113, AddressType=Postal, AddressTypeInd=P, Address1=770 BAR CRESCENT, Address2=, Address3=, Address4=, PostalCode=1192, Address=770 BAR CRESCENT 1192, LastUpdatedDate=2021-09-29, FirstReportedDate=2002-11-13}], ConsumerTelephoneHistory=[{DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456789, TelephoneType=Cellular, TelephoneTypeInd=C, TelCode=083, TelNo=6400000, TelephoneNo=0836400000, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456783, TelephoneType=Work, TelephoneTypeInd=W, TelCode=012, TelNo=1210258, TelephoneNo=0121210258, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2017-04-28}], ConsumerEmploymentHistory=[{DisplayText=Consumer Employment History, EmployerDetail=DATANAMIX PTY LTD, Designation=, LastUpdatedDate=2015-07-11, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Employment History, EmployerDetail=DATANAMIX LTD, Designation=, LastUpdatedDate=2013-01-20, FirstReportedDate=2002-11-13}], BioMetricVerificationResult={ApplicationErrors=, Base64StringJpeg2000Image=iVBORw0KGgoAAAANSUhEUgAAAh8AAAK5CA............., HasImage=True, TmStamp=2023-06-21 10:05:36 AM, TransactionNumber=2306000000000, VerificationErrors=, SubscriberEnquiryID=230600, HanisIDMatch=Matched}}, {RealTimeIDV={InputIDNO=0000000000001, HAIDNO=0000000000001, IDNOMatchStatus=Matched, HANames=JACKIE, HASurname=SOAP, HAGender=Female, HADateOfBirth=1988-03-20, HABirthPlace=SOUTH AFRICA, HADeceasedStatus=Alive, HADeceasedDate=, DeathPlace=, CauseOfDeath=, HAMarriageStatus=MARRIED, HAMarriageDate=2016-01-21, HAIDBookIssuedDate=2007-06-19, IdCardInd=Yes, HAIDCardDate=2016-11-10, HAIDSequenceNumber=, HAIDNumberBlocked=NO, HASpouseID=0000000000000, HAChild1ID=1700000000001, HAChild1Status=ALIVE, HAChild2ID=, HAChild2Status=, HAChild3ID=, HAChild3Status=, HAChild4ID=, HAChild4Status=, HAChild5ID=, HAChild5Status=, HAChild6ID=, HAChild6Status=, HAChild7ID=, HAChild7Status=, HAChild8ID=, HAChild8Status=, HAChild9ID=, HAChild9Status=, HAChild10ID=, HAChild10Status=, HAChild11ID=, HAChild11Status=, HAChild12ID=, HAChild12Status=, HAChild13ID=, HAChild13Status=, HAChild14ID=, HAChild14Status=, HAChild15ID=, HAChild15Status=, HAChild16ID=, HAChild16Status=, HAChild17ID=, HAChild17Status=, HAChild18ID=, HAChild18Status=, HAChild19ID=, HAChild19Status=, HAChild20ID=, HAChild20Status=, HAChild21ID=, HAChild21Status=, HAMotherID=0, HAFatherID=0, HAErrorDescription=}, Relationship={Relation=Spouse}, ConsumerAddressHistory=[{DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456789, TelephoneType=Cellular, TelephoneTypeInd=C, TelCode=083, TelNo=6400000, TelephoneNo=0836400000, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456783, TelephoneType=Work, TelephoneTypeInd=W, TelCode=012, TelNo=1210258, TelephoneNo=0121210258, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2017-04-28}], ConsumerEmploymentHistory={DisplayText=Consumer Employment History, EmployerDetail=APPLE PROPERTIES, Designation=, LastUpdatedDate=2014-04-26, FirstReportedDate=2012-02-27}, BioMetricVerificationResult={ApplicationErrors=, Base64StringJpeg2000Image=iVBORw0KGgoAAAANSUhEUgAAAh8AAAK5CAIAAACQett1AAAABG..........., HasImage=True, TmStamp=2023-06-21 10:05:47 AM, TransactionNumber=2306219340352, VerificationErrors=, SubscriberEnquiryID=58251247, HanisIDMatch=Matched}}, {RealTimeIDV={InputIDNO=1700000000001, HAIDNO=1700000000001, IDNOMatchStatus=Matched, HANames=JOEY JOE, HASurname=SOAP, HAGender=Male, HADateOfBirth=2017-01-01, HABirthPlace=SOUTH AFRICA, HADeceasedStatus=Alive, HADeceasedDate=, DeathPlace=, CauseOfDeath=, HAMarriageStatus=SINGLE, HAMarriageDate=, HAIDBookIssuedDate=, IdCardInd=No, HAIDCardDate=, HAIDSequenceNumber=, HAIDNumberBlocked=NO, HASpouseID=, HAChild1ID=, HAChild1Status=, HAChild2ID=, HAChild2Status=, HAChild3ID=, HAChild3Status=, HAChild4ID=, HAChild4Status=, HAChild5ID=, HAChild5Status=, HAChild6ID=, HAChild6Status=, HAChild7ID=, HAChild7Status=, HAChild8ID=, HAChild8Status=, HAChild9ID=, HAChild9Status=, HAChild10ID=, HAChild10Status=, HAChild11ID=, HAChild11Status=, HAChild12ID=, HAChild12Status=, HAChild13ID=, HAChild13Status=, HAChild14ID=, HAChild14Status=, HAChild15ID=, HAChild15Status=, HAChild16ID=, HAChild16Status=, HAChild17ID=, HAChild17Status=, HAChild18ID=, HAChild18Status=, HAChild19ID=, HAChild19Status=, HAChild20ID=, HAChild20Status=, HAChild21ID=, HAChild21Status=, HAMotherID=0000000000001, HAFatherID=0000000000000, HAErrorDescription=}, Relationship={Relation=Child}, BioMetricVerificationResult={ApplicationErrors=, Base64StringJpeg2000Image=, HasImage=False, TmStamp=2023-06-21 10:05:55 AM, TransactionNumber=2306219340923, VerificationErrors=No JPEG 2000 photograph, SubscriberEnquiryID=58251247, HanisIDMatch=Matched}}]}}}'
+              examples:
+                Example 1:
+                  value:
+                    '{Status': 'Success, Result={Consumers={Consumer=[{RealTimeIDV={InputIDNO=0000000000000, HAIDNO=0000000000000, IDNOMatchStatus=Matched, HANames=JOE JACKSON, HASurname=SOAP, HAGender=Male, HADateOfBirth=1990-01-19, HABirthPlace=SOUTH AFRICA, HADeceasedStatus=Alive, HADeceasedDate=, DeathPlace=, CauseOfDeath=, HAMarriageStatus=MARRIED, HAMarriageDate=2016-01-21, HAIDBookIssuedDate=2008-10-13, IdCardInd=Yes, HAIDCardDate=2016-11-21, HAIDSequenceNumber=, HAIDNumberBlocked=NO, HASpouseID=0000000000001, HAChild1ID=1700000000001, HAChild1Status=ALIVE, HAChild2ID=, HAChild2Status=, HAChild3ID=, HAChild3Status=, HAChild4ID=, HAChild4Status=, HAChild5ID=, HAChild5Status=, HAChild6ID=, HAChild6Status=, HAChild7ID=, HAChild7Status=, HAChild8ID=, HAChild8Status=, HAChild9ID=, HAChild9Status=, HAChild10ID=, HAChild10Status=, HAChild11ID=, HAChild11Status=, HAChild12ID=, HAChild12Status=, HAChild13ID=, HAChild13Status=, HAChild14ID=, HAChild14Status=, HAChild15ID=, HAChild15Status=, HAChild16ID=, HAChild16Status=, HAChild17ID=, HAChild17Status=, HAChild18ID=, HAChild18Status=, HAChild19ID=, HAChild19Status=, HAChild20ID=, HAChild20Status=, HAChild21ID=, HAChild21Status=, HAMotherID=0, HAFatherID=0, HAErrorDescription=}, Relationship={Relation=Master}, ConsumerEmailHistory={DisplayText=Consumer Email History, EmailAddress=joe@test.com, LastUpdatedDate=2014-11-30}, ConsumerAddressHistory=[{DisplayText=Consumer Address History, ConsumerAddressID=000000112, AddressType=Residential, AddressTypeInd=R, Address1=12 LONG RD, Address2=, Address3=, Address4=, PostalCode=2000, Address= 12 HOUSE RD 0000, LastUpdatedDate=2021-09-29, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Address History, ConsumerAddressID=000000113, AddressType=Postal, AddressTypeInd=P, Address1=770 BAR CRESCENT, Address2=, Address3=, Address4=, PostalCode=1192, Address=770 BAR CRESCENT 1192, LastUpdatedDate=2021-09-29, FirstReportedDate=2002-11-13}], ConsumerTelephoneHistory=[{DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456789, TelephoneType=Cellular, TelephoneTypeInd=C, TelCode=083, TelNo=6400000, TelephoneNo=0836400000, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456783, TelephoneType=Work, TelephoneTypeInd=W, TelCode=012, TelNo=1210258, TelephoneNo=0121210258, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2017-04-28}], ConsumerEmploymentHistory=[{DisplayText=Consumer Employment History, EmployerDetail=DATANAMIX PTY LTD, Designation=, LastUpdatedDate=2015-07-11, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Employment History, EmployerDetail=DATANAMIX LTD, Designation=, LastUpdatedDate=2013-01-20, FirstReportedDate=2002-11-13}], BioMetricVerificationResult={ApplicationErrors=, Base64StringJpeg2000Image=iVBORw0KGgoAAAANSUhEUgAAAh8AAAK5CA............., HasImage=True, TmStamp=2023-06-21 10:05:36 AM, TransactionNumber=2306000000000, VerificationErrors=, SubscriberEnquiryID=230600, HanisIDMatch=Matched}}, {RealTimeIDV={InputIDNO=0000000000001, HAIDNO=0000000000001, IDNOMatchStatus=Matched, HANames=JACKIE, HASurname=SOAP, HAGender=Female, HADateOfBirth=1988-03-20, HABirthPlace=SOUTH AFRICA, HADeceasedStatus=Alive, HADeceasedDate=, DeathPlace=, CauseOfDeath=, HAMarriageStatus=MARRIED, HAMarriageDate=2016-01-21, HAIDBookIssuedDate=2007-06-19, IdCardInd=Yes, HAIDCardDate=2016-11-10, HAIDSequenceNumber=, HAIDNumberBlocked=NO, HASpouseID=0000000000000, HAChild1ID=1700000000001, HAChild1Status=ALIVE, HAChild2ID=, HAChild2Status=, HAChild3ID=, HAChild3Status=, HAChild4ID=, HAChild4Status=, HAChild5ID=, HAChild5Status=, HAChild6ID=, HAChild6Status=, HAChild7ID=, HAChild7Status=, HAChild8ID=, HAChild8Status=, HAChild9ID=, HAChild9Status=, HAChild10ID=, HAChild10Status=, HAChild11ID=, HAChild11Status=, HAChild12ID=, HAChild12Status=, HAChild13ID=, HAChild13Status=, HAChild14ID=, HAChild14Status=, HAChild15ID=, HAChild15Status=, HAChild16ID=, HAChild16Status=, HAChild17ID=, HAChild17Status=, HAChild18ID=, HAChild18Status=, HAChild19ID=, HAChild19Status=, HAChild20ID=, HAChild20Status=, HAChild21ID=, HAChild21Status=, HAMotherID=0, HAFatherID=0, HAErrorDescription=}, Relationship={Relation=Spouse}, ConsumerAddressHistory=[{DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456789, TelephoneType=Cellular, TelephoneTypeInd=C, TelCode=083, TelNo=6400000, TelephoneNo=0836400000, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2002-11-13}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=123456783, TelephoneType=Work, TelephoneTypeInd=W, TelCode=012, TelNo=1210258, TelephoneNo=0121210258, EmailAddress=, LastUpdatedDate=2020-08-21, FirstReportedDate=2017-04-28}], ConsumerEmploymentHistory={DisplayText=Consumer Employment History, EmployerDetail=APPLE PROPERTIES, Designation=, LastUpdatedDate=2014-04-26, FirstReportedDate=2012-02-27}, BioMetricVerificationResult={ApplicationErrors=, Base64StringJpeg2000Image=iVBORw0KGgoAAAANSUhEUgAAAh8AAAK5CAIAAACQett1AAAABG..........., HasImage=True, TmStamp=2023-06-21 10:05:47 AM, TransactionNumber=2306219340352, VerificationErrors=, SubscriberEnquiryID=58251247, HanisIDMatch=Matched}}, {RealTimeIDV={InputIDNO=1700000000001, HAIDNO=1700000000001, IDNOMatchStatus=Matched, HANames=JOEY JOE, HASurname=SOAP, HAGender=Male, HADateOfBirth=2017-01-01, HABirthPlace=SOUTH AFRICA, HADeceasedStatus=Alive, HADeceasedDate=, DeathPlace=, CauseOfDeath=, HAMarriageStatus=SINGLE, HAMarriageDate=, HAIDBookIssuedDate=, IdCardInd=No, HAIDCardDate=, HAIDSequenceNumber=, HAIDNumberBlocked=NO, HASpouseID=, HAChild1ID=, HAChild1Status=, HAChild2ID=, HAChild2Status=, HAChild3ID=, HAChild3Status=, HAChild4ID=, HAChild4Status=, HAChild5ID=, HAChild5Status=, HAChild6ID=, HAChild6Status=, HAChild7ID=, HAChild7Status=, HAChild8ID=, HAChild8Status=, HAChild9ID=, HAChild9Status=, HAChild10ID=, HAChild10Status=, HAChild11ID=, HAChild11Status=, HAChild12ID=, HAChild12Status=, HAChild13ID=, HAChild13Status=, HAChild14ID=, HAChild14Status=, HAChild15ID=, HAChild15Status=, HAChild16ID=, HAChild16Status=, HAChild17ID=, HAChild17Status=, HAChild18ID=, HAChild18Status=, HAChild19ID=, HAChild19Status=, HAChild20ID=, HAChild20Status=, HAChild21ID=, HAChild21Status=, HAMotherID=0000000000001, HAFatherID=0000000000000, HAErrorDescription=}, Relationship={Relation=Child}, BioMetricVerificationResult={ApplicationErrors=, Base64StringJpeg2000Image=, HasImage=False, TmStamp=2023-06-21 10:05:55 AM, TransactionNumber=2306219340923, VerificationErrors=No JPEG 2000 photograph, SubscriberEnquiryID=58251247, HanisIDMatch=Matched}}]}}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@datanamix.com'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+      x-stoplight:
+        id: kmga9fvbu0cga
+  /pbverify-authentication-questions:
+    post:
+      tags:
+        - Authentication Questions
+      summary: Retrieve Questions
+      description: Gets an array of Personal questions to present to your Consumer for authentication.
+      operationId: AuthQuestions
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - idNumber
+                - memberkey
+                - mobileCode
+                - mobileNumber
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: Consumers 13 digit ID Number
+                mobileCode:
+                  type: string
+                  description: First 3 digits of the mobile number
+                mobileNumber:
+                  type: string
+                  description: Last 7 digits of the mobile number
+                requiredAuthenticationPassPercentage:
+                  type: string
+                  description: 'integer percentage 0 - 100 for pass rate, if left blank an 80% pass rate is specified.'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, QuestionSetId=22, Result={QuestionDocument=[{ProductAuthenticationQuestionID=24001, Question=What is the credit limit on your Woolworths Card account?, AnswerStatusInd=P, QuestionPointValue=54, RequiredNoOfAnswers=1, Answers={AnswerDocument=[{AnswerID=13793938, Answer=0 - 3000, IsEnteredAnswerYN=false}, {AnswerID=13793941, Answer=10001 - 15000, IsEnteredAnswerYN=false}, {AnswerID=13793940, Answer=7001 - 10000, IsEnteredAnswerYN=false}, {AnswerID=13793942, Answer=15001 - 25000, IsEnteredAnswerYN=false}, {AnswerID=13793944, Answer=None of these, IsEnteredAnswerYN=false}, {AnswerID=13793939, Answer=3001 - 7000, IsEnteredAnswerYN=false}, {AnswerID=13793943, Answer=25001+, IsEnteredAnswerYN=false}]}}, {ProductAuthenticationQuestionID=29020, Question=What is the Date Of Issue for your South African Green ID book?, AnswerStatusInd=P, QuestionPointValue=50, RequiredNoOfAnswers=1, Answers={AnswerDocument=[{AnswerID=13793933, Answer=(Incorrect), IsEnteredAnswerYN=false}, {AnswerID=13793932, Answer=2008-10-13, IsEnteredAnswerYN=false}]}}, {ProductAuthenticationQuestionID=21012, Question=Name your clothing store accounts, AnswerStatusInd=P, QuestionPointValue=67, RequiredNoOfAnswers=1, Answers={AnswerDocument=[{AnswerID=13793947, Answer=ABC Shoes, IsEnteredAnswerYN=false}, {AnswerID=13793946, Answer=Luella, IsEnteredAnswerYN=false}, {AnswerID=13793945, Answer=Woolworths R & D, IsEnteredAnswerYN=false}, {AnswerID=13793949, Answer=None of these, IsEnteredAnswerYN=false}, {AnswerID=13793948, Answer=Sales House, IsEnteredAnswerYN=false}]}}, {ProductAuthenticationQuestionID=21007, Question=Is your Santam account active?, AnswerStatusInd=P, QuestionPointValue=85, RequiredNoOfAnswers=1, Answers={AnswerDocument=[{AnswerID=13793935, Answer=No, IsEnteredAnswerYN=false}, {AnswerID=13793934, Answer=Yes, IsEnteredAnswerYN=false}]}}, {ProductAuthenticationQuestionID=27001, Question=Have you worked at PITNEY BOWES SA PTY5 KINR 1?, AnswerStatusInd=P, QuestionPointValue=84, RequiredNoOfAnswers=1, Answers={AnswerDocument=[{AnswerID=13793936, Answer=Yes, IsEnteredAnswerYN=false}, {AnswerID=13793937, Answer=No, IsEnteredAnswerYN=false}]}}]}}'
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+      x-stoplight:
+        id: 17ivfcvagenbc
+  /pbverify-authentication-answers:
+    post:
+      tags:
+        - Authentication Questions
+      summary: Post Answers
+      description: Method called to send the anwser given from the Datanamix-authentication-questions.
+      operationId: AuthAnwswer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - Answers
+                - QuestionSetId
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                QuestionSetId:
+                  type: string
+                  description: Question Set ID
+                Answers:
+                  type: string
+                  description: Return the Questions object as recieved but just with answer inputted
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result={RequiredAuthenticatedPerc=80.0000, AuthenticatedPerc=59.4118, FirstName=JOHN, Surname=DOE, IDNo=8404199808705, Ha_DeaseasedStatus=Active}}'
+      x-stoplight:
+        id: o8tcux63ph8a0
+  /pbverify-authentication-questions-unblock-consumer-request:
+    post:
+      tags:
+        - Authentication Questions
+      summary: Unblock Consumer
+      description: Enables you to unblock a consumer when the consumer is blocked due to failing the questions.
+      operationId: AuthQuestionsUnblock
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - idNumber
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: Consumers 13 digit ID Number
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Error=Consumer Unblocked Successfully.}'
+      x-stoplight:
+        id: wnymllosyzqkz
+  /pbverify-consumer-kyc:
+    post:
+      tags:
+        - Know Your Customer (KYC)
+      summary: Retrieve Credit Bureau data
+      description: 'The Consumer KYC Service provides an efficient and fast way for a business to verify their customers. In addition to the verification check this service will also return contact, address and employment information.'
+      operationId: addressCr
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Consumer_Trace={EnquiryID=17198745680493844799, DateCreated=2021-09-15 13:29:08:982, DefiniteMatchData={IdentityNumber=7908015558078, IdentityType=SID, Forename1=JOHN, Surname=DOE, DateOfBirth=1979-08-01, Verified=Y, DateVerified=2021-07-31, Deceased=N}, AddressData={AddressDataRecord=[{Line1=5 SKALIE STREET, Line2=WEST ACRES, Line3=NELSPRUIT, PostalCode=1201, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2008-01-23, LastDateUpdated=2019-08-31, NumberOfSources=2, AddressSources={AddressSourceRecord=[{SubscriberCode=126, SubscriberName=HOLLARD INSURANCE, FirstDateCreated=2019-03-31, LastDateUpdated=2019-08-31}, {SubscriberCode=0, SubscriberName=COMPUSCAN HQ, FirstDateCreated=2008-01-23, LastDateUpdated=2008-09-30}]}}, {Line1=P O BOX P O BOX19320, Line2=NELSPRUIT, PostalCode=1200, AddressType=P, AddressTypeDescription=POSTAL, FirstDateCreated=2016-04-30, LastDateUpdated=2019-06-30, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2016-04-30, LastDateUpdated=2019-06-30}}}, {Line1=13 TRICELIA STREET, Line2=WEST ACRES, Line3=NELSPRUIT, PostalCode=1201, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2016-04-30, LastDateUpdated=2019-06-30, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2016-04-30, LastDateUpdated=2019-06-30}}}, {Line1=18 TRICELIA STREET, Line2=WEST ACRES, Line3=NELSPRUIT, PostalCode=1201, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2012-03-31, LastDateUpdated=2019-02-28, NumberOfSources=2, AddressSources={AddressSourceRecord=[{SubscriberCode=5908, SubscriberName=TELKOM NGN, FirstDateCreated=2019-01-31, LastDateUpdated=2019-02-28}, {SubscriberCode=47, SubscriberName=TELKOM, FirstDateCreated=2012-03-31, LastDateUpdated=2017-07-31}]}}, {Line1=UNKNOW, Line2=UNKNOW, PostalCode=0000, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2015-01-27, LastDateUpdated=2019-01-29, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberName=HINT, FirstDateCreated=2015-01-27, LastDateUpdated=2019-01-29}}}, {Line1=8 SKALIE STREET, Line2=WEST ACRES, Line3=NELSPRUIT, PostalCode=1201, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2010-09-30, LastDateUpdated=2017-11-30, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberCode=55, SubscriberName=ABSA HOME LOANS, FirstDateCreated=2010-09-30, LastDateUpdated=2017-11-30}}}, {Line1=18A TRACHILIA STREET, PostalCode=0000, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2014-03-31, LastDateUpdated=2017-11-30, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberCode=5347, SubscriberName=DISCOVERY INSURE SHORT TERM INSURANCE, FirstDateCreated=2014-03-31, LastDateUpdated=2017-11-30}}}, {Line1=P O BOX 19320, Line2=NELSPRUIT, PostalCode=1211, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2008-01-23, LastDateUpdated=2017-11-30, NumberOfSources=9, AddressSources={AddressSourceRecord=[{SubscriberCode=5347, SubscriberName=DISCOVERY INSURE SHORT TERM INSURANCE, FirstDateCreated=2014-03-31, LastDateUpdated=2017-11-30}, {SubscriberCode=55, SubscriberName=ABSA HOME LOANS, FirstDateCreated=2010-09-30, LastDateUpdated=2017-11-30}, {SubscriberCode=47, SubscriberName=TELKOM, FirstDateCreated=2013-01-31, LastDateUpdated=2016-09-30}, {SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2012-01-31, LastDateUpdated=2016-02-29}, {SubscriberCode=5489, SubscriberName=MULTICHOICE, FirstDateCreated=2013-04-25, LastDateUpdated=2015-06-30}, {SubscriberCode=60, SubscriberName=ABSA VEHICLE FINANCE, FirstDateCreated=2009-03-31, LastDateUpdated=2013-04-30}, {SubscriberCode=160, SubscriberName=OUTSURANCE, FirstDateCreated=2009-01-31, LastDateUpdated=2012-10-31}, {SubscriberName=PLUM, FirstDateCreated=2009-08-02, LastDateUpdated=2009-08-02}, {SubscriberCode=0, SubscriberName=COMPUSCAN HQ, FirstDateCreated=2008-01-23, LastDateUpdated=2008-08-09}]}}, {Line1=19320, Line2=NELSPRUIT, PostalCode=1200, AddressType=P, AddressTypeDescription=POSTAL, FirstDateCreated=2016-03-31, LastDateUpdated=2016-05-31, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberCode=11, SubscriberName=WESBANK MOTOR LOANS, FirstDateCreated=2016-03-31, LastDateUpdated=2016-05-31}}}, {Line1=45 GONE STREET, Line2=NELSPRUIT, PostalCode=1200, AddressType=R, AddressTypeDescription=RESIDENTIAL, FirstDateCreated=2016-03-31, LastDateUpdated=2016-05-31, NumberOfSources=1, AddressSources={AddressSourceRecord={SubscriberCode=11, SubscriberName=WESBANK MOTOR LOANS, FirstDateCreated=2016-03-31, LastDateUpdated=2016-05-31}}}]}, EmploymentData={EmploymentDataRecord=[{EmpName=COOL SHOP 1, FirstDateCreated=2017-08-31, LastDateUpdated=2019-06-30, NumberOfSources=1, EmploymentSources={EmploymentSourceRecord={SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2017-08-31, LastDateUpdated=2019-06-30}}}, {EmpName=COOL SHOP 2, Occupation=MANAGERS, FirstDateCreated=2013-10-31, LastDateUpdated=2016-05-31, NumberOfSources=1, EmploymentSources={EmploymentSourceRecord={SubscriberCode=11, SubscriberName=WESBANK MOTOR LOANS, FirstDateCreated=2013-10-31, LastDateUpdated=2016-05-31}}}, {EmpName=COOL SHOP 3, FirstDateCreated=2009-03-31, LastDateUpdated=2013-04-30, NumberOfSources=1, EmploymentSources={EmploymentSourceRecord={SubscriberCode=60, SubscriberName=ABSA VEHICLE FINANCE, FirstDateCreated=2009-03-31, LastDateUpdated=2013-04-30}}}]}, ContactData={ContactDataRecord=[{ContactNumber=0823397650, CountryCode=27, ContactType=C, ContactTypeDescription=CELL, FirstDateCreated=2019-05-10, LastDateUpdated=2019-08-31, NumberOfSources=1, ContactSources={ContactSourceRecord={SubscriberCode=126, SubscriberName=HOLLARD INSURANCE, FirstDateCreated=2019-05-10, LastDateUpdated=2019-08-31}}}, {ContactNumber=0137532507, AreaCode=013, CountryCode=27, ContactType=W, ContactTypeDescription=WORK, FirstDateCreated=2019-05-10, LastDateUpdated=2019-08-31, NumberOfSources=1, ContactSources={ContactSourceRecord={SubscriberCode=126, SubscriberName=HOLLARD INSURANCE, FirstDateCreated=2019-05-10, LastDateUpdated=2019-08-31}}}, {ContactNumber=0137412881, AreaCode=013, CountryCode=27, ContactType=H, ContactTypeDescription=HOME, FirstDateCreated=2019-05-10, LastDateUpdated=2019-08-31, NumberOfSources=1, ContactSources={ContactSourceRecord={SubscriberCode=126, SubscriberName=HOLLARD INSURANCE, FirstDateCreated=2019-05-10, LastDateUpdated=2019-08-31}}}, {ContactNumber=0722256250, CountryCode=27, ContactType=C, ContactTypeDescription=CELL, FirstDateCreated=2019-01-31, LastDateUpdated=2019-06-30, NumberOfSources=1, ContactSources={ContactSourceRecord={SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2019-01-31, LastDateUpdated=2019-06-30}}}, {ContactNumber=0137532909, AreaCode=013, CountryCode=27, ContactType=W, ContactTypeDescription=WORK, FirstDateCreated=2019-01-31, LastDateUpdated=2019-06-30, NumberOfSources=1, ContactSources={ContactSourceRecord={SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2019-01-31, LastDateUpdated=2019-06-30}}}, {ContactNumber=0137532909, AreaCode=013, CountryCode=27, ContactType=W, ContactTypeDescription=WORK, FirstDateCreated=2012-01-31, LastDateUpdated=2018-11-30, NumberOfSources=3, ContactSources={ContactSourceRecord=[{SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2012-01-31, LastDateUpdated=2018-11-30}, {SubscriberName=AXON, FirstDateCreated=2012-02-05, LastDateUpdated=2013-12-01}, {SubscriberName=PLUM, FirstDateCreated=2012-02-05, LastDateUpdated=2012-02-05}]}}, {ContactNumber=07265435640, CountryCode=27, ContactType=C, ContactTypeDescription=CELL, FirstDateCreated=2012-01-31, LastDateUpdated=2018-11-30, NumberOfSources=2, ContactSources={ContactSourceRecord=[{SubscriberCode=187, SubscriberName=STANDARD BANK HOME LOANS, FirstDateCreated=2012-01-31, LastDateUpdated=2018-11-30}, {SubscriberName=PLUM, FirstDateCreated=2012-04-12, LastDateUpdated=2013-06-18}]}}, {ContactNumber=04356346346, CountryCode=27, ContactType=C, ContactTypeDescription=CELL, FirstDateCreated=2009-07-31, LastDateUpdated=2017-11-30, NumberOfSources=10, ContactSources={ContactSourceRecord=[{SubscriberCode=5347, SubscriberName=DISCOVERY INSURE SHORT TERM INSURANCE, FirstDateCreated=2014-03-31, LastDateUpdated=2017-11-30}, {SubscriberCode=55, SubscriberName=ABSA HOME LOANS, FirstDateCreated=2010-09-30, LastDateUpdated=2017-11-30}, {SubscriberCode=11, SubscriberName=WESBANK MOTOR LOANS, FirstDateCreated=2013-10-31, LastDateUpdated=2016-05-31}, {SubscriberCode=5489, SubscriberName=MULTICHOICE, FirstDateCreated=2013-04-25, LastDateUpdated=2016-05-31}, {SubscriberName=HINT, FirstDateCreated=2014-12-30, LastDateUpdated=2015-06-23}, {SubscriberName=AXON, FirstDateCreated=2014-09-23, LastDateUpdated=2015-04-13}, {SubscriberCode=160, SubscriberName=OUTSURANCE, FirstDateCreated=2011-07-31, LastDateUpdated=2014-03-31}, {SubscriberName=PLUM, FirstDateCreated=2012-04-12, LastDateUpdated=2013-06-18}, {SubscriberCode=60, SubscriberName=ABSA VEHICLE FINANCE, FirstDateCreated=2010-09-30, LastDateUpdated=2013-04-30}, {SubscriberCode=0, SubscriberName=COMPUSCAN HQ, FirstDateCreated=2009-07-31, LastDateUpdated=2009-08-31}]}}, {ContactNumber=04567457560, AreaCode=013, CountryCode=27, ContactType=W, ContactTypeDescription=WORK, FirstDateCreated=2008-04-10, LastDateUpdated=2017-11-30, NumberOfSources=5, ContactSources={ContactSourceRecord=[{SubscriberCode=55, SubscriberName=ABSA HOME LOANS, FirstDateCreated=2010-09-30, LastDateUpdated=2017-11-30}, {SubscriberName=AXON, FirstDateCreated=2011-10-03, LastDateUpdated=2012-07-31}, {SubscriberName=PLUM, FirstDateCreated=2011-10-03, LastDateUpdated=2012-07-31}, {SubscriberCode=160, SubscriberName=OUTSURANCE, FirstDateCreated=2009-01-31, LastDateUpdated=2011-03-31}, {SubscriberCode=0, SubscriberName=COMPUSCAN HQ, FirstDateCreated=2008-04-10, LastDateUpdated=2008-08-05}]}}, {ContactNumber=0123456789, AreaCode=012, CountryCode=27, ContactType=H, ContactTypeDescription=HOME, FirstDateCreated=2009-07-31, LastDateUpdated=2017-11-30, NumberOfSources=3, ContactSources={ContactSourceRecord=[{SubscriberCode=55, SubscriberName=ABSA HOME LOANS, FirstDateCreated=2010-09-30, LastDateUpdated=2017-11-30}, {SubscriberName=PLUM, FirstDateCreated=2011-09-05, LastDateUpdated=2011-09-05}, {SubscriberCode=0, SubscriberName=COMPUSCAN HQ, FirstDateCreated=2009-07-31, LastDateUpdated=2009-07-31}]}}]}}}'
+      x-stoplight:
+        id: gd3l1aetxu775
+  /pbverify-kyc:
+    post:
+      tags:
+        - Know Your Customer (KYC)
+      summary: Match Customer Against Bureau
+      description: 'This API call gives businesses that are required to FICA their customers, the ability to digitally compare inputted ID and Address data against the SACRRA (South African Credit Risk Reporting Association) database, using a rule set of match criteria to match against the member''s database. The API will also display the names of the SACRRA member where that address appears. If the address does not appear according to the match criteria KYC will fail using an exception rule. Please see Extended Documetation for further detailed explanations of how to use this service.'
+      operationId: kyc
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[enquiryReason]'
+                - 'consumer_details[firstname]'
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[surname]'
+                - 'consumer_details[yourReference]'
+                - 'match_criteria[city]'
+                - 'match_criteria[dateRange]'
+                - 'match_criteria[minimumMatch]'
+                - 'match_criteria[pocode]'
+                - 'match_criteria[province]'
+                - 'match_criteria[street]'
+                - 'match_criteria[suburb]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 digit ID Number
+                'consumer_details[firstname]':
+                  type: string
+                  description: Consumers First names for comparison against Home Affairs Database
+                'consumer_details[secondname]':
+                  type: string
+                  description: Consumers Second names for comparison against Home Affairs Database
+                'consumer_details[surname]':
+                  type: string
+                  description: Consumers Surname for comparison against Home Affairs Database
+                'consumer_details[enquiryReason]':
+                  type: string
+                  description: FICA | Tracing | Credit Assessment
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+                'match_criteria[street]':
+                  type: string
+                  description: Consumers Street address
+                'match_criteria[suburb]':
+                  type: string
+                  description: Consumers Suburb
+                'match_criteria[city]':
+                  type: string
+                  description: Consumers City
+                'match_criteria[province]':
+                  type: string
+                  description: Consumers Province
+                'match_criteria[pocode]':
+                  type: string
+                  description: Comsumers Postal Code
+                'match_criteria[dateRange]':
+                  type: string
+                  description: 'the period of time in months you wish to look back from current date : 3 | 6 | 9 | 12 | 18 | 36'
+                'match_criteria[minimumMatch]':
+                  type: string
+                  description: The amount of times you wish the inputted address to match against the SACRA database addresses
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, KYC_Response={ConsumerDetail={DisplayText=Consumer Detail, Initials=J, FirstName=JUST, Surname=GOOFY, IDNo=7905015389079}, SuccessfulAddressMatches=[{Address=TRICELIA ST 18 WEST ACRES NELSPRUIT 1201, SubscriberName=Telkom, LastUpdatedDate=2017-05-25}, {Address=TRICELIA ST 18 WEST ACRES NELSPRUIT 1201, SubscriberName=Telkom, LastUpdatedDate=2017-05-25}], MinimumMatchCriteria={matchDateRange=12 months, matchFound=2, matchRequested=2, matchSuccessful=Yes}}}'
+      x-stoplight:
+        id: 457f02k1yud4s
+  /pbverify-address-sacrra:
+    post:
+      tags:
+        - Know Your Customer (KYC)
+      summary: Addresses from SACRRA
+      description: This API service provides an efficient and fast way to retrieve last updated address from SACRRA members.
+      operationId: addressSaccra
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[lastname]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                'consumer_details[lastname]':
+                  type: string
+                  description: Lastname of Consumer
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, SACRRA_Response={ConsumerDetail={DisplayText=Consumer Detail, Initials=P, FirstName=JUST, SecondName=[], Surname=GOOFY, IDNo=7905014568789, Gender=Male, CellularNo=0821111111}, AddressHistory=[{Address=PO BOX 4652 WildHills 1200, SubscriberName=Std Bank Home Loans, LastUpdatedDate=2019-07-08}, {Address=13 Lost Forest ST WildHills 1201, SubscriberName=Std Bank Home Loans, LastUpdatedDate=2019-07-08}, {Address=5 SKALIE STREET GUATENG 1201, SubscriberName=Hollard Short Term Insurance, LastUpdatedDate=2019-06-26}, {Address=18 HappyHollows ST WildHills 1201, SubscriberName=Telkom NGN, LastUpdatedDate=2019-07-09}, {Address=18 HappyHollows ST WildHills 1201, SubscriberName=Telkom NGN, LastUpdatedDate=2019-07-09}]}}'
+      x-stoplight:
+        id: r8kgabcbfn0si
+  /pbverify-express-score:
+    post:
+      tags:
+        - Express Credit Score
+      summary: Express Score
+      description: 'This service that enables businesses to draw an express credit report in seconds, at less than half the cost of the full report. Please see Extended Documetation for further detailed explanations of how to use this service.'
+      operationId: expressScore
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[searchReason]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+                'consumer_details[searchReason]':
+                  type: string
+                  description: 'Choose one of the following reasons ( ''Credit Limit'', ''Score Development'', ''Affordability Assessment'', ''Credit Assessment'', ''Account Management'', ''Consumer Enquiry'')'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{idNumber=79084578946513, results=[{resultType=NLR, score=639, reasons=[{reasonCode=NA52, reasonDescription=NA52-No Revolving Accounts Held}, {reasonCode=NA22, reasonDescription=NA22-Too few Mature CPA Accounts with Good Payment History}]}, {resultType=CPA, score=652, reasons=[{reasonCode=CA35, reasonDescription=CA35-High Utilisation on All Accounts}, {reasonCode=CA52, reasonDescription=CA52-No Revolving Accounts Held}]}]}'
+      x-stoplight:
+        id: bk6ejkmb0c2eu
+  /pbverify-affordability-assessment:
+    post:
+      tags:
+        - Affordability
+      summary: Affordability Assessment
+      description: 'Our Affordability Assessment Service uses a consumer’s income (gross and/or net), calculates their necessary expenses (the minimum living expenses as required in terms of regulations), then it evaluates the consumer’s total monthly debt repayment obligations and returns the consumer’s available income (discretionary income). This will indicate the consumer’s ability to fund the proposed credit instalment in terms of a new credit agreement.'
+      operationId: affordabilityAssessment
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - grossIncomeAmount
+                - idNumber
+                - livingExpenses
+                - memberkey
+                - name
+                - netIncomeAmount
+                - password
+                - surname
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                name:
+                  type: string
+                  description: First name of consumer
+                surname:
+                  type: string
+                  description: Surname of consumer
+                grossIncomeAmount:
+                  type: number
+                  description: Consumer’s Gross monthly income amount (as a whole rand value)
+                netIncomeAmount:
+                  type: number
+                  description: Consumer’s Net monthly income amount (as a whole rand value)
+                livingExpenses:
+                  type: number
+                  description: Consumer’s declared monthly living expenses (as a whole rand value excluding bureau expenses)
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result={ID_NUMBER=8310241111111, NAME=John, SURNAME=Doe, EXPENSES=15000, Gross_Income_Amount=30000, Cal_Gross_Income_Amount=30000, Net_Income_Amount=24500, Cal_Net_Income_Amount=24297, GMIP_Value=0, GMIP_Confidence_Level=NOT APPLICABLE, GMIP_Band=UNABLE TO DETERMINE GMIP, Bureau_Expenses=0, Calc_Living_Expenses=15000, Calc_Expense=15000.00, Disposable_Income=9297.00, Enq_id=1356856}}'
+      x-stoplight:
+        id: gy6kwzsgch5y2
+  /datanamix-consumer-credit:
+    post:
+      tags:
+        - Consumer Credit Reports
+      summary: Datanamix Consumer Report
+      description: Datanamix Consumer Credit Report
+      operationId: datanamixConsumerCredit
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - enquiryReason
+                - firstName
+                - idNumber
+                - lastName
+                - memberkey
+                - password
+                - reference
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: 13-digit South African ID Number/Passport Number
+                isPassport:
+                  type: boolean
+                  description: Indicate whether the idNumber input is a passport number
+                  default: false
+                  enum:
+                    - false
+                    - true
+                firstName:
+                  type: string
+                  description: Legal firstname of the consumer
+                lastName:
+                  type: string
+                  description: Legal lastname name of the consumer
+                enquiryReason:
+                  type: integer
+                  description: The reason for performing the credit check. 1 - Credit Application; 2 - Credit Limit; 3 - Insurance Application; 4 - Insurance Claim; 5 - Employment Check
+                  format: int32
+                  enum:
+                    - '1'
+                    - '2'
+                    - '3'
+                    - '4'
+                    - '5'
+                reference:
+                  type: string
+                  description: Your search reference
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result={ConsumerDirectorSummary={DisplayText=Consumer Director Summary, NumberOfCompanyDirector=0}, ConsumerEnquiryHistory=[{DisplayText=Consumer Enquiry History, EnquiryDate=2022-12-02, SubscriberName=uat, SubscriberBusinessTypeDesc=Other, CreditGrantorEnquiryReasonDesc=CreditAssesment, SubscriberContact=0000000000}, {DisplayText=Consumer Enquiry History, EnquiryDate=2022-07-27, SubscriberName=Africa, SubscriberBusinessTypeDesc=Other, CreditGrantorEnquiryReasonDesc=Reckless Lending, SubscriberContact=0873302434}], ConsumerAddressHistory=[{DisplayText=Consumer Address History, ConsumerAddressID=821537659, AddressType=Residential, AddressTypeInd=R, Address1=1 TELESURE LANE, Address2=[], Address3=MOSSELBAAI, Address4=MOSSEL BAY, PostalCode=6506, Address=1 TELESURE LANE MOSSELBAAI MOSSEL BAY 6506, LastUpdatedDate=2022-05-05, FirstReportedDate=2022-05-05}, {DisplayText=Consumer Address History, ConsumerAddressID=815677457, AddressType=Residential, AddressTypeInd=R, Address1=1 TELESURE LANE, Address2=[], Address3=RIVERGLEN, Address4=FOURWAYS, PostalCode=2191, Address=1 TELESURE LANE RIVERGLEN FOURWAYS 2191, LastUpdatedDate=2022-02-03, FirstReportedDate=2021-05-11}], ConsumerDetail={DisplayText=Consumer Detail, ConsumerID=159779707, Initials=T, FirstName=T, SecondName=[], ThirdName=[], Surname=CTEST, MaidenName=[], IDNo=6210276940086, PassportNo=[], BirthDate=1962-10-27, Gender=Male, TitleDesc=Mister, MaritalStatusDesc=Unknown, PrivacyStatus=ACCEPTS CONTACTS, ResidentialAddress=1 TELESURE LANE MOSSELBAAI MOSSEL BAY 6506, PostalAddress=[], HomeTelephoneNo=[], WorkTelephoneNo=[], CellularNo=[], EmailAddress=[], EmployerDetail=[], ReferenceNo=C57890265-159779707, ExternalReference=TEST, SpouseFirstName=[], SpouseSurName=[]}, ConsumerFraudIndicatorsSummary={DisplayText=Consumer Fraud Indicators Summary, SAFPSListingYN=No access - SAFPS Members only, HomeAffairsVerificationYN=No, HomeAffairsDeceasedStatus=Unknown, EmployerFraudVerificationYN=[], ProtectiveVerificationYN=[], HomeAffairsDeceasedDate=[]}, ConsumerScoring={DisplayText=Consumer Scoring, SubscriberID=12371, Unique_Identifier=159779707, ScoreDate=2023-01-31, FinalScore=630.0000, Exception_Code=[], ReasonCode1=NUMBER OF LONG TERM CREDIT ACCOUNTS, ReasonCode2=NUMBER OF BANKING ACCOUNTS, ReasonCode3=NUMBER OF REVOLVING CREDIT ACCOUNTS, ModelID=Model DELINQUENT, classification=Classification: Low Rating, Description=Consumer has LOW probability of collection, RiskCategory=Potential High Risk}, ConsumerPropertyInformationSummary={DisplayText=Consumer Property Information Summary, TotalProperty=0, PurchasePrice=0.0000}, AccountTypeLegend=[{DisplayText=AccountType Legend, AccountTypeCode=B, AccountTypeDesc=Building Loan}, {DisplayText=AccountType Legend, AccountTypeCode=C, AccountTypeDesc=Credit Card}, {DisplayText=AccountType Legend, AccountTypeCode=D, AccountTypeDesc=Debt Recovery}, {DisplayText=AccountType Legend, AccountTypeCode=E, AccountTypeDesc=Single Credit Facility}, {DisplayText=AccountType Legend, AccountTypeCode=F, AccountTypeDesc=Open Account}, {DisplayText=AccountType Legend, AccountTypeCode=G, AccountTypeDesc=Garage Card}, {DisplayText=AccountType Legend, AccountTypeCode=H, AccountTypeDesc=Home Loan}, {DisplayText=AccountType Legend, AccountTypeCode=I, AccountTypeDesc=Instalment Account}, {DisplayText=AccountType Legend, AccountTypeCode=J, AccountTypeDesc=Unsecured Revolving Loan}, {DisplayText=AccountType Legend, AccountTypeCode=K, AccountTypeDesc=Unsecured Term Loan}, {DisplayText=AccountType Legend, AccountTypeCode=L, AccountTypeDesc=Life Insurance}, {DisplayText=AccountType Legend, AccountTypeCode=N, AccountTypeDesc=Pension Backed Lending}, {DisplayText=AccountType Legend, AccountTypeCode=O, AccountTypeDesc=Open Account}, {DisplayText=AccountType Legend, AccountTypeCode=P, AccountTypeDesc=Personal Cash Loan}, {DisplayText=AccountType Legend, AccountTypeCode=R, AccountTypeDesc=Revolving Credit}, {DisplayText=AccountType Legend, AccountTypeCode=S, AccountTypeDesc=Short Term Insurance}, {DisplayText=AccountType Legend, AccountTypeCode=T, AccountTypeDesc=Student Loans}, {DisplayText=AccountType Legend, AccountTypeCode=U, AccountTypeDesc=Utility}, {DisplayText=AccountType Legend, AccountTypeCode=V, AccountTypeDesc=Overdraft}], ConsumerAccountStatus=[{DisplayText=Consumer Account Status, ConsumerAccountID=358453508, SubscriberID=17, AccountNo=778681323, SubAccountNo=[], AccountOpenedDate=2022-03-15, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2022-03-16, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}, {DisplayText=Consumer Account Status, ConsumerAccountID=358454141, SubscriberID=17, AccountNo=829627239, SubAccountNo=[], AccountOpenedDate=2022-03-03, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2022-03-04, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}, {DisplayText=Consumer Account Status, ConsumerAccountID=348298488, SubscriberID=17, AccountNo=557905741, SubAccountNo=[], AccountOpenedDate=2021-09-15, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2021-09-20, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}, {DisplayText=Consumer Account Status, ConsumerAccountID=348304190, SubscriberID=17, AccountNo=888117641, SubAccountNo=[], AccountOpenedDate=2021-09-15, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2021-09-20, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}, {DisplayText=Consumer Account Status, ConsumerAccountID=348309293, SubscriberID=17, AccountNo=952140387, SubAccountNo=[], AccountOpenedDate=2021-09-15, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2021-09-20, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}, {DisplayText=Consumer Account Status, ConsumerAccountID=348307687, SubscriberID=17, AccountNo=952140388, SubAccountNo=[], AccountOpenedDate=2021-09-15, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2021-09-20, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}, {DisplayText=Consumer Account Status, ConsumerAccountID=342143920, SubscriberID=17, AccountNo=778574651, SubAccountNo=[], AccountOpenedDate=2021-05-11, SubscriberName=Telesure Investment, CreditLimitAmt=0.0000, CurrentBalanceAmt=0.0000, MonthlyInstalmentAmt=0.0000, ArrearsAmt=0.0000, ArrearsTypeInd=[], AccountType=S, LastPaymentDate=2021-05-13, StatusCodeDesc=Closed, DeferredPaymentDate=[], ThirdPartyName=[], NoOfParticipantsInJointLoan=0}], Consumer24MonthlyPaymentHeader={DisplayText=Consumer 24 Monthly Payment Header, Company=Company, M24=FEB 2021, M23=MAR 2021, M22=APR 2021, M21=MAY 2021, M20=JUN 2021, M19=JUL 2021, M18=AUG 2021, M17=SEP 2021, M16=OCT 2021, M15=NOV 2021, M14=DEC 2021, M13=JAN 2022, M12=FEB 2022, M11=MAR 2022, M10=APR 2022, M09=MAY 2022, M08=JUN 2022, M07=JUL 2022, M06=AUG 2022, M05=SEP 2022, M04=OCT 2022, M03=NOV 2022, M02=DEC 2022, M01=JAN 2023}, Consumer24MonthlyPayment=[{DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2022-03-15T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=778681323, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=#, M19=#, M18=#, M17=#, M16=#, M15=#, M14=#, M13=#, M12=#, M11=#, M10=G, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}, {DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2022-03-03T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=829627239, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=#, M19=#, M18=#, M17=#, M16=#, M15=#, M14=#, M13=#, M12=#, M11=#, M10=G, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}, {DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2021-09-15T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=557905741, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=#, M19=#, M18=#, M17=#, M16=G, M15=#, M14=#, M13=#, M12=#, M11=#, M10=#, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}, {DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2021-09-15T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=888117641, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=#, M19=#, M18=#, M17=#, M16=G, M15=#, M14=#, M13=#, M12=#, M11=#, M10=#, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}, {DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2021-09-15T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=952140387, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=#, M19=#, M18=#, M17=#, M16=G, M15=#, M14=#, M13=#, M12=#, M11=#, M10=#, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}, {DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2021-09-15T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=952140388, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=#, M19=#, M18=#, M17=#, M16=G, M15=#, M14=#, M13=#, M12=#, M11=#, M10=#, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}, {DisplayText=Consumer 24 Monthly Payment, AccountOpenedDate=2021-05-11T00:00:00+02:00, SubscriberName=Telesure Investment, AccountNo=778574651, SubAccountNo=[], M24=#, M23=#, M22=#, M21=#, M20=G, M19=#, M18=#, M17=#, M16=#, M15=#, M14=#, M13=#, M12=#, M11=#, M10=#, M09=#, M08=#, M07=#, M06=#, M05=#, M04=#, M03=#, M02=#, M01=#}], ConsumerDefinition=[{DisplayText=Consumer Definition, DefinitionCode=#, DefinitionDesc=No data found}, {DisplayText=Consumer Definition, DefinitionCode=*, DefinitionDesc=Repeat of previous month''s Status Code}, {DisplayText=Consumer Definition, DefinitionCode=0, DefinitionDesc=Not in arrears}, {DisplayText=Consumer Definition, DefinitionCode=1-9, DefinitionDesc=No of months in arrears}, {DisplayText=Consumer Definition, DefinitionCode=G, DefinitionDesc=Cancelled by consumer}, {DisplayText=Consumer Definition, DefinitionCode=P, DefinitionDesc=Paid Up}], ConsumerCPANLRDebtSummary={DisplayText=Consumer CPANLR Debt Summary, TotalMonthlyInstallmentCPA=0.0000, TotalOutStandingDebtCPA=0.0000, NoOFActiveAccountsCPA=0, NoOfAccountInGoodStandingCPA=0, NoOfAccountInBadStandingCPA=0, TotalArrearAmountCPA=0.0000, TotalAdverseAmountCPA=0.0000, NoOfAccountsOpenedinLast45DaysCPA=0, NoOfPaidUpOrClosedAccountsCPA=7, NoOfEnquiriesLast90DaysOWNCPA=0, NoOfEnquiriesLast90DaysOTHCPA=0, HighestMonthsinArrearsCPA=0, TotalMonthlyInstallmentNLR=0.0000, TotalOutStandingDebtNLR=0.0000, NoOFActiveAccountsNLR=0, NoOfAccountInGoodStandingNLR=0, NoOfAccountInBadStandingNLR=0, TotalArrearAmountNLR=0.0000, TotalAdverseAmountNLR=0.0000, NoOfAccountsOpenedinLast45DaysNLR=0, NoOfPaidUpOrClosedAccountsNLR=0, NoOfEnquiriesLast90DaysOWNNLR=0, NoOfEnquiriesLast90DaysOTHNLR=0, HighestMonthsinArrearsNLR=0, TotalMonthlyInstallment=0.0000, TotalOutStandingDebt=0.0000, NoOFActiveAccounts=0, NoOfAccountInGoodStanding=0, NoOfAccountInBadStanding=0, TotalArrearAmount=0.0000, HighestMonthsInArrears=[], NoOfAccountsOpenedinLast45Days=0, NoOfPaidUpOrClosedAccounts=7, NoOfEnquiriesLast90DaysOWN=0, NoOfEnquiriesLast90DaysOTH=0, JudgementCount=0, TotalJudgmentAmt=0, MostRecentJudgmentDate=[], CourtNoticeCount=0, TotalCourtNoticeAmt=0, MostRecentCourtNoticeDate=[], NoofAccountdefaults=0, TotalAdverseAmt=0, MostRecentAdverseDate=[], DefaultListingCount=0, DefaultListingAmt=0, RecentDefaultListingDate=[], NoOfEnqinLast24Months=0, MostRecentEnqDateLast24Months=[], DebtReviewStatus=[], DisputeMessage=[]}}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@datanamix.com'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+      x-stoplight:
+        id: ziu23zbunhzub
+  /compuscan-consumer-credit-report:
+    post:
+      tags:
+        - Consumer Credit Reports
+      summary: Compuscan Consumer Report
+      description: This API function is to allow activated clients the ability to pull a Compuscan consumer credit report. Please see Extended Documentation for further detailed explanations of how to use this service.
+      operationId: compuscanCreditReport
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[firstname]'
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[lastname]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                'consumer_details[firstname]':
+                  type: string
+                  description: Consumers First Name
+                'consumer_details[lastname]':
+                  type: string
+                  description: Consumers Surname/Lastname
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{CC_RESULTS={EnqCC_ENQ_COUNTS=[{ADDR=5, ADMORDS=0, COLLECTIONS=0, DMATCHES=1, JUDGE=0, NOTICES=0, PMATCHES=0, PREV_ENQ=15, TPHONE=5, EMPLOYERS=3, FRAUDALERT=0, CPACC=3, NLRACC=0, PUB_DEF=0, DIRECTORS_CNT=4, DEEDS_CNT=1, BONDS_CNT=1, CS_ADVERSE=0}], EnqCC_ADDRESS=[{ADDRESS_TYPE=R, LINE_1=5 SKALIE STREET, LINE_2=WEST ACRES, LINE_3=CAPE TOWN, LINE_4=, POSTAL_CODE=1201, DATE_CREATED=31/05/2021, ADDR_DATE_CREATED=31/08/2019}, {ADDRESS_TYPE=P, LINE_1=P O BOX P O BOX19320, LINE_2=CAPE TOWN, LINE_3=, LINE_4=, POSTAL_CODE=1200, DATE_CREATED=31/05/2021, ADDR_DATE_CREATED=30/06/2019}, {ADDRESS_TYPE=R, LINE_1=41 TRICELIA STREET, LINE_2=WEST ACRES, LINE_3=CAPE TOWN, LINE_4=, POSTAL_CODE=1201, DATE_CREATED=31/05/2021, ADDR_DATE_CREATED=30/06/2019}, {ADDRESS_TYPE=R, LINE_1=42 TRICELIA STREET, LINE_2=WEST ACRES, LINE_3=CAPE TOWN, LINE_4=, POSTAL_CODE=1201, DATE_CREATED=31/05/2021, ADDR_DATE_CREATED=28/02/2019}, {ADDRESS_TYPE=R, LINE_1=UNKNOW, LINE_2=UNKNOW, LINE_3=, LINE_4=, POSTAL_CODE=0000, DATE_CREATED=31/05/2021, ADDR_DATE_CREATED=29/01/2019}], EnqCC_ADMINORD=[], EnqCC_COLLECTIONS=[], EnqCC_JUDGEMENTS=[], EnqCC_NOTICES=[], EnqCC_DMATCHES=[{ID_NUMBER=21341234123214, COUNTRY_CODE=South Africa, NAME=JOHN, SURNAME=DOE, STATUS=Verified, DECEASED_DATE=}], EnqCC_PMATCHES=[], EnqCC_PREVENQ=[{ENQUIRY_DATE=31-05-2021 10:03, BRANCH_NAME=Datanamix - 1, CONTACT_PERSON=DATANAMIX, TELEPHONE_NUMBER=(011) 516 9400}], EnqCC_TELEPHONE=[{TEL_NUMBER_TYPE=W, TEL_NUMBER=456745674567, DATE_CREATED=31-05-2021, TEL_DATE_CREATED=10-05-2019}, {TEL_NUMBER_TYPE=H, TEL_NUMBER=456745674567, DATE_CREATED=31-05-2021, TEL_DATE_CREATED=10-05-2019}, {TEL_NUMBER_TYPE=C, TEL_NUMBER=5746745674567, DATE_CREATED=31-05-2021, TEL_DATE_CREATED=10-05-2019}], EnqCC_SRCHCRITERIA=[{CRIT_IDNUMBER=3425452345234, CRIT_NAME=John  , CRIT_SURNAME=Doe, ENQ_CNT_NAME=South Africa, ENQ_DATE=2021-05-31 11:03:59, DOB=1979-05-01, GENDER=MALE, PASSPORT_FLAG=NO, ADDRESS=UNKNOW UNKNOW UNKNOW UNKNOW XXXXX, LOAN_AMOUNT=, NET_INCOME=, ENQUIRY_PURPOSE=Consumer Enquiry, HOMETEL= , WORK_TEL= , CRIT_CELL_NUM=}], EnqCC_SRCHCRITERIA_CODIX=[], EnqCC_TRACE=[], EnqCC_EMPLOYER=[{EMP_NAME=Company 1, EMP_DATE=2019-06-30, OCCUPATION= , EMP_TYPE= , SALARY_FREQ= , PAYSLIP_REF= , EMPLOYEE_NO= , DATE_CREATED=2021-05-31}, {EMP_NAME=Company 2, EMP_DATE=2016-05-31, OCCUPATION=MANAGERS, EMP_TYPE= , SALARY_FREQ= , PAYSLIP_REF= , EMPLOYEE_NO= , DATE_CREATED=2021-05-31}, {EMP_NAME=Company 3, EMP_DATE=2013-04-30, OCCUPATION= , EMP_TYPE= , SALARY_FREQ= , PAYSLIP_REF= , EMPLOYEE_NO= , DATE_CREATED=2021-05-31}], EnqCC_ACTIVITIES=[{ENQUIRIES=20, LOANS=0, JUDGEMENTS=0, NOTICES=0, COLLECTIONS=0, ADMINORDERS=0, BALANCE=0, INSTALLMENT=0}], EnqCC_Fraud={EnqCC_Fraud_SUMM=[]}, EnqCC_CPA_ACCOUNTS=[{SUBSCRIBER_CODE=126, SUBSCRIBER_NAME=HOLLARD INSURANCE, BRANCH_CODE=, ACCOUNT_NO=1003001071, SUB_ACCOUNT_NO=, OWNERSHIP_TYPE=00, OWNERSHIP_TYPE_DESC=OTHER, REASON=, REASON_DESC=, PAYMENT_TYPE=00, PAYMENT_TYPE_DESC=OTHER, ACCOUNT_TYPE=S, ACCOUNT_TYPE_DESC=Short Term Insurance, OPEN_DATE=2018-10-01, DEFERRED_PAYMENT_DATE=, LAST_PAYMENT_DATE=2019-08-16, OPEN_BAL=0, OPEN_BAL_IND= , CURRENT_BAL=0, CURRENT_BAL_IND=D, OVERDUE_AMOUNT=0, OVERDUE_AMOUNT_IND= , INSTALMENT_AMOUNT=0, ARREARS_PERIOD=0, REPAYMENT_FREQ=3, REPAYMENT_FREQ_DESC=MONTHLY, TERMS=0, STATUS_CODE=G, STATUS_CODE_DESC=CANCELLED BY CLIENT, STATUS_DATE=2019-08-31, THIRD_PARTY_NAME=, THIRD_PARTY_SOLD=0, THIRD_PARTY_SOLD_DESC=, JOINT_LOAN_PARTICIPANTS=0, PAYMENT_HISTORY=0?00000000?, PAYMENT_HISTORY_STATUS=G?--------?, MONTH_END_DATE=2019-08-31, DATE_CREATED=2021-05-31}, {SUBSCRIBER_CODE=5908, SUBSCRIBER_NAME=TELKOM NGN, BRANCH_CODE=, ACCOUNT_NO=502446454, SUB_ACCOUNT_NO=, OWNERSHIP_TYPE=00, OWNERSHIP_TYPE_DESC=OTHER, REASON=O, REASON_DESC=OTHER, PAYMENT_TYPE=00, PAYMENT_TYPE_DESC=OTHER, ACCOUNT_TYPE=F, ACCOUNT_TYPE_DESC=Service Related without limit, OPEN_DATE=2017-08-26, DEFERRED_PAYMENT_DATE=, LAST_PAYMENT_DATE=2020-10-01, OPEN_BAL=0, OPEN_BAL_IND= , CURRENT_BAL=0, CURRENT_BAL_IND=D, OVERDUE_AMOUNT=0, OVERDUE_AMOUNT_IND= , INSTALMENT_AMOUNT=0, ARREARS_PERIOD=0, REPAYMENT_FREQ=3, REPAYMENT_FREQ_DESC=MONTHLY, TERMS=0, STATUS_CODE=C, STATUS_CODE_DESC=ACCOUNT CLOSED, STATUS_DATE=2020-10-31, THIRD_PARTY_NAME=, THIRD_PARTY_SOLD=0, THIRD_PARTY_SOLD_DESC=, JOINT_LOAN_PARTICIPANTS=0, PAYMENT_HISTORY=0???0??????????000000000, PAYMENT_HISTORY_STATUS=C???C??????????PP-P--PPP, MONTH_END_DATE=2020-10-31, DATE_CREATED=2021-05-31}, {SUBSCRIBER_CODE=187, SUBSCRIBER_NAME=STANDARD BANK HOME LOANS, BRANCH_CODE=, ACCOUNT_NO=365834696, SUB_ACCOUNT_NO=, OWNERSHIP_TYPE=02, OWNERSHIP_TYPE_DESC=JOINT LOAN, REASON=H, REASON_DESC=NEW PROPERTY ACQUISITION OR UP, PAYMENT_TYPE=00, PAYMENT_TYPE_DESC=OTHER, ACCOUNT_TYPE=H, ACCOUNT_TYPE_DESC=Home Loans, OPEN_DATE=2011-12-06, DEFERRED_PAYMENT_DATE=, LAST_PAYMENT_DATE=2019-06-01, OPEN_BAL=650000, OPEN_BAL_IND= , CURRENT_BAL=0, CURRENT_BAL_IND=D, OVERDUE_AMOUNT=0, OVERDUE_AMOUNT_IND= , INSTALMENT_AMOUNT=0, ARREARS_PERIOD=0, REPAYMENT_FREQ=3, REPAYMENT_FREQ_DESC=MONTHLY, TERMS=240, STATUS_CODE=C, STATUS_CODE_DESC=ACCOUNT CLOSED, STATUS_DATE=2019-06-25, THIRD_PARTY_NAME=, THIRD_PARTY_SOLD=0, THIRD_PARTY_SOLD_DESC=, JOINT_LOAN_PARTICIPANTS=2, PAYMENT_HISTORY=0000000000000000000?0000, PAYMENT_HISTORY_STATUS=C------------------?----, MONTH_END_DATE=2019-06-30, DATE_CREATED=2021-05-31}], EnqCC_NLR_ACCOUNTS=[], EnqCC_DEBT_RESTRUCT=[], EnqCC_ADVERSE=[], EnqCC_PUBLIC_DEFAULTS=[], EnqCC_CompuSCORE=[{RISK_TYPE=AVERAGE RISK, RISK_COLOUR_R=245, RISK_COLOUR_G=236, RISK_COLOUR_B=86, SCORE=620, DECLINE_R_1=NA58-High Number of Recent Enquiries, DECLINE_R_2=NA52-No Revolving Accounts Held, DECLINE_R_3=NA22-Too few Mature CPA Accounts with Good Payment History, THIN_FILE_INDICATOR=N, VERSION=2, SCORE_TYPE=NLR}], EnqCC_STATS=[{CC_JUDGE_12_CNT=0, CC_JUDGE_24_CNT=0, CC_JUDGE_36_CNT=0, CC_NOTICE_12_CNT=0, CC_NOTICE_24_CNT=0, CC_NOTICE_36_CNT=0, CC_ADVERSE_12_CNT=0, CC_ADVERSE_24_CNT=0, CC_ADVERSE_36_CNT=0, CC_EVO_ADVERSE_12_CNT=0, CC_EVO_ADVERSE_24_CNT=0, CC_EVO_ADVERSE_36_CNT=0, CC_ADVERSE_TOT=0}], EnqCC_Deeds_DATA={PROPERTIES=[{ERF_NO=4, PROPERTY_TYPE=FREE HOLDING, TOWNSHIP=WEST ACRES, PORTION=00003, UNIT=?, SECT_SCHEME_NAME=?, PROPERTY_ID=9393080600170964149}], PROP_DETAILS=[{ERF_NO=4, REGISTRATION_DATE=2011-12-06, PURCHASE_DATE=2011-09-22, PURCH_PRICE=R1150000, TITLE_SHARE=50.0%, TITLE_DEED_NO=T12642/2011, PROPERTY_ID=9393080600170964149}], BOND_DETAILS=[{ERF_NO=4, INSTITUTION=STANDARD, BOND_AMOUNT=R650000, BOND_NUMBER=B8842/2011, BOND_REGISTRATION_DATE_DAY=2011-12-06, NO_PROP=2, BOND_REGISTRATION_DATE=2011-12-06 00:00:00.0, PROPERTY_ID=9393080600170964149}]}, EnqCC_Directors_DATA={DIRECTORS_INFO=[{ENT_TYPE=CLOSE CORPORATION CC, COMPANY_REG_NUMBER=2008/234234/23, COMPANY_NAME=Company 1, REG_DATE=08-04-2008, BUSS_STRT_DATE=08-04-2008, STATUS_CODE=03, STATUS_DESC=In Business, STATUS_DATE=?, SIC_CODE=COMPUTER AND RELATED ACTIVITIES, APP_DATE=03-02-2010, MEMBER_TYPE=Member, MEMBER_CONTRIBUTION=R40, MEMBER_CONTRIBUTION_TYPE=?, RESIGNATION_DATE=?, MEM_STATUS_CODE=A, MEM_STATUS_DESC=Active, MEM_STATUS_DATE=03-02-2010, MEMBER_SIZE=40}, {ENT_TYPE=CLOSE CORPORATION CC, COMPANY_REG_NUMBER=2009/234234/23, COMPANY_NAME=Company 2, REG_DATE=03-03-2009, BUSS_STRT_DATE=03-03-2009, STATUS_CODE=20, STATUS_DESC=Conversion CO/CC or CC/CO, STATUS_DATE=13-12-2016, SIC_CODE=OTHER SERVICE ACTIVITIES, APP_DATE=03-03-2009, MEMBER_TYPE=Member, MEMBER_CONTRIBUTION=R10, MEMBER_CONTRIBUTION_TYPE=?, RESIGNATION_DATE=?, MEM_STATUS_CODE=A, MEM_STATUS_DESC=Active, MEM_STATUS_DATE=03-03-2009, MEMBER_SIZE=100}, {ENT_TYPE=PRIVATE COMPANY (PTY) LTD, COMPANY_REG_NUMBER=2005/234523/07, COMPANY_NAME=Company 3, REG_DATE=16-05-2005, BUSS_STRT_DATE=16-05-2005, STATUS_CODE=29, STATUS_DESC=AR FINAL DEREGISTRATION, STATUS_DATE=?, SIC_CODE=RETAIL TRADE, EXCEPT OF MOTORVEHICLES AND MOTOR CYCLES; REPAIR OF PERSONAL AND HOUSEHOLD GOODS, APP_DATE=30-06-2006, MEMBER_TYPE=Director, MEMBER_CONTRIBUTION=UNKNOWN, MEMBER_CONTRIBUTION_TYPE=?, RESIGNATION_DATE=?, MEM_STATUS_CODE=A, MEM_STATUS_DESC=Active, MEM_STATUS_DATE=30-06-2006, MEMBER_SIZE=UNKNOWN}, {ENT_TYPE=PRIVATE COMPANY (PTY) LTD, COMPANY_REG_NUMBER=2016/34234234/07, COMPANY_NAME=Company 4, REG_DATE=13-12-2016, BUSS_STRT_DATE=13-12-2016, STATUS_CODE=03, STATUS_DESC=In Business, STATUS_DATE=?, SIC_CODE=LANDBOU, JAG, BOSBOU EN VISSERY, APP_DATE=13-12-2016, MEMBER_TYPE=Director, MEMBER_CONTRIBUTION=UNKNOWN, MEMBER_CONTRIBUTION_TYPE=?, RESIGNATION_DATE=?, MEM_STATUS_CODE=A, MEM_STATUS_DESC=Active, MEM_STATUS_DATE=13-12-2016, MEMBER_SIZE=UNKNOWN}]}, NLR_SUMMARY={Summary={NLR_Past_12_Months={Enquiries_by_client=4, Enquiries_by_other=21, Positive_loans=0, Highest_months_in_arrears=0}, NLR_Past_24_Months={Enquiries_by_client=4, Enquiries_by_other=21, Positive_loans=0, Highest_months_in_arrears=0}, NLR_Past_36_Months={Enquiries_by_client=4, Enquiries_by_other=21, Positive_loans=0, Highest_months_in_arrears=0}, NLR_WorstMonthsArrears=0, NLR_ActiveAccounts=0, NLR_BalanceExposure=0, NLR_MonthlyInstallment=0, NLR_CumulativeArrears=0, NLR_ClosedAccounts=0, CCA_Past_12_Months={Enquiries_by_client=24, Enquiries_by_other=20, Positive_loans=0, Highest_months_in_arrears=0}, CCA_Past_24_Months={Enquiries_by_client=24, Enquiries_by_other=20, Positive_loans=0, Highest_months_in_arrears=0}, CCA_Past_36_Months={Enquiries_by_client=24, Enquiries_by_other=20, Positive_loans=0, Highest_months_in_arrears=0}, CCA_WorstMonthsArrears=0, CCA_ActiveAccounts=0, CCA_BalanceExposure=0, CCA_MonthlyInstallment=0, CCA_CumulativeArrears=0, CCA_ClosedAccounts=3, AdverseAccounts=0, RevolvingAccounts=0, InstalmentAccounts=0, OpenAccounts=0, HighestJudgement=0}}}, CC_CODIX=[], CC_ENQUIRY_ID=461570904}'
+      x-stoplight:
+        id: xp1gjiio3qpvs
+  /xds-consumer-credit-report:
+    post:
+      tags:
+        - Consumer Credit Reports
+      summary: XDS Consumer Report
+      description: This API function is to allow activated clients the ability to pull a XDS consumer credit report. Please see Extended Documetation for further detailed explanations of how to use this service.
+      operationId: xdsCreditReport
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[firstInitial]'
+                - 'consumer_details[idNumber]'
+                - 'consumer_details[lastname]'
+                - 'consumer_details[searchReason]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                'consumer_details[firstInitial]':
+                  type: string
+                  description: Consumers First Initial
+                'consumer_details[lastname]':
+                  type: string
+                  description: Consumers Surname
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+                'consumer_details[searchReason]':
+                  type: string
+                  description: 'Your Search Reason - Credit Bureau Realated 1 - Credit Application, 2 - Credit Limit Management, 3 - Insurance Application, 4 - Insurance Claim'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{ReportInformation={ReportID=1, ReportName=Consumer Credit Report}, ConsumerDirectorSummary={DisplayText=Consumer Director Summary, NumberOfCompanyDirector=0}, ConsumerJudgement={DisplayText=Consumer Judgement, CaseFilingDate=2012-05-02, CaseType=JUDGMENT BY DEFAULT, LastUpdatedDate=2012-07-13, PlaintiffName=DMC DEBT MANAGEMENT PTY LTD, DisputeAmt=6535, CaseReason=MONIES LENT, CourtName=Durban, CaseNumber=25829/2012, AttorneyName=S D COETZEE INC, TelephoneNo=[], Comments=[]}, ConsumerEnquiryHistory=[{DisplayText=Consumer Enquiry History, EnquiryDate=2016-06-20, SubscriberName=The Debt Works cc (NCRDC1798), SubscriberBusinessTypeDesc=Other, CreditGrantorEnquiryReasonDesc=Credit assessment, SubscriberContact=0218244117}, {DisplayText=Consumer Enquiry History, EnquiryDate=2017-02-09, SubscriberName=Pitney Bowes - Web service, SubscriberBusinessTypeDesc=Other, CreditGrantorEnquiryReasonDesc=3, SubscriberContact=0116459100}], ConsumerDebtReviewStatus={DisplayText=Consumer Debt Review Status, IDno=7007015014085, FirstName=JAYSEELAN, SurName=NAIDOO, BirthDate=1970-07-01, DebtReviewStatusDate=2016-06-20, DebtCounsellorName=Lolette Lubbe, DebtCounsellorFirstName=Lolette, DebtCounsellorSurName=Lubbe, DebtCounsellorTelephoneNo=''0218244117, DebtReviewStatusCode=A, HomeTelephoneNo=[], WorkTelephoneNo=[], CellularNo=[], DebtReviewStatus=Consumer has Applied for Debt Review, DebtCounsellorRegistrationNo=NCRDC1798}, ConsumerAddressHistory=[{DisplayText=Consumer Address History, ConsumerAddressID=506770286, AddressType=Residential, AddressTypeInd=R, Address1=20 ERIKA AVENUE, Address2=DALTON, Address3=GREYTOWN, Address4=[], PostalCode=3236, Address=20 ERIKA AVENUE DALTON GREYTOWN 3236, LastUpdatedDate=2015-04-09, FirstReportedDate=2014-11-21}, {DisplayText=Consumer Address History, ConsumerAddressID=486604173, AddressType=Residential, AddressTypeInd=R, Address1=20 ERACA AVENUE, Address2=[], Address3=[], Address4=DALTON, PostalCode=3236, Address=20 ERACA AVENUE DALTON 3236, LastUpdatedDate=2015-02-11, FirstReportedDate=2013-11-13}, {DisplayText=Consumer Address History, ConsumerAddressID=476784429, AddressType=Residential, AddressTypeInd=R, Address1=20 ERICA AVENUE, Address2=[], Address3=COOL AIR GREYTOWN, Address4=COOL AIR GREYTOWN, PostalCode=3236, Address=20 ERICA AVENUE COOL AIR GREYTOWN COOL AIR GREYTOWN 3236, LastUpdatedDate=2015-02-02, FirstReportedDate=2014-09-22}, {DisplayText=Consumer Address History, ConsumerAddressID=506050496, AddressType=Postal, AddressTypeInd=P, Address1=20 ERIKA AVENUE, Address2=DALTON, Address3=GREYTOWN, Address4=[], PostalCode=3236, Address=20 ERIKA AVENUE DALTON GREYTOWN 3236, LastUpdatedDate=2015-04-09, FirstReportedDate=2014-11-21}, {DisplayText=Consumer Address History, ConsumerAddressID=446915039, AddressType=Postal, AddressTypeInd=P, Address1=20 ERICA AVUNUE, Address2=[], Address3=DALTON, Address4=KWAZULU-NATAL, PostalCode=[], Address=20 ERICA AVUNUE DALTON KWAZULU-NATAL, LastUpdatedDate=2015-01-24, FirstReportedDate=2014-10-02}], ConsumerTelephoneHistory=[{DisplayText=Consumer Telephone History, ConsumerTelephoneID=475716838, TelephoneType=Work, TelephoneTypeInd=W, TelCode=033, TelNo=5011600, TelephoneNo=0335011600, EmailAddress=[], LastUpdatedDate=2016-10-22, FirstReportedDate=2014-10-02}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=456294570, TelephoneType=Cellular, TelephoneTypeInd=C, TelCode=076, TelNo=4697359, TelephoneNo=0764697359, EmailAddress=[], LastUpdatedDate=2015-10-14, FirstReportedDate=2007-04-01}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=456294507, TelephoneType=Work, TelephoneTypeInd=W, TelCode=033, TelNo=4133115, TelephoneNo=0334133115, EmailAddress=[], LastUpdatedDate=2015-10-14, FirstReportedDate=2007-04-01}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=456294412, TelephoneType=Home, TelephoneTypeInd=H, TelCode=033, TelNo=5011600, TelephoneNo=0335011600, EmailAddress=[], LastUpdatedDate=2015-10-14, FirstReportedDate=2007-04-01}, {DisplayText=Consumer Telephone History, ConsumerTelephoneID=441956406, TelephoneType=Work, TelephoneTypeInd=W, TelCode=033, TelNo=5011924, TelephoneNo=0335011924, EmailAddress=[], LastUpdatedDate=2015-02-11, FirstReportedDate=2013-11-13}], ConsumerEmploymentHistory=[{DisplayText=Consumer Employment History, EmployerDetail=UCL COMPANY PTY LTD, Designation=[], LastUpdatedDate=2015-02-11, FirstReportedDate=2013-11-13}, {DisplayText=Consumer Employment History, EmployerDetail=JOINT VENTRUE ACCREDITED, Designation=[], LastUpdatedDate=2013-02-20, FirstReportedDate=2006-11-27}, {DisplayText=Consumer Employment History, EmployerDetail=UCL COMPANY LIMITED UC, Designation=[], LastUpdatedDate=2008-12-18, FirstReportedDate=2014-10-02}, {DisplayText=Consumer Employment History, EmployerDetail=SPAR SUPERMARKETDES, Designation=[], LastUpdatedDate=2008-10-21, FirstReportedDate=2008-10-21}], ConsumerDetail={DisplayText=Consumer Detail, ConsumerID=50343194, Initials=J, FirstName=JAYSEELAN, SecondName=[], ThirdName=[], Surname=NAIDOO, IDNo=7007015014085, PassportNo=[], BirthDate=1970-07-01, Gender=Male, TitleDesc=Mister, MaritalStatusDesc=Married, PrivacyStatus=ACCEPTS CONTACTS, ResidentialAddress=20 ERIKA AVENUE DALTON GREYTOWN 3236, PostalAddress=20 ERIKA AVENUE DALTON GREYTOWN 3236, HomeTelephoneNo=0335011600, WorkTelephoneNo=0335011600, CellularNo=0764697359, EmailAddress=[], EmployerDetail=UCL COMPANY PTY LTD, ReferenceNo=C173726621-50343194, ExternalReference=Testing system}, ConsumerFraudIndicatorsSummary={DisplayText=Consumer Fraud Indicators Summary, SAFPSListingYN=No access - SAFPS Members only, HomeAffairsVerificationYN=Yes, HomeAffairsDeceasedStatus=No, EmployerFraudVerificationYN=[], ProtectiveVerificationYN=[], HomeAffairsDeceasedDate=[]}, ConsumerPropertyInformationSummary={DisplayText=Consumer Property Information Summary, TotalProperty=0, PurchasePrice=0.0000}, SubscriberInputDetails={EnquiryDate=2017-02-09T08:34:03.9014806+02:00, EnquiryType=Consumer Credit Enquiry, SubscriberName=Pitney Bowes - Web service, SubscriberUserName=Pitney Bowes, EnquiryInput=7007015014085 | NAIDOO, EnquiryReason=3}}'
+      x-stoplight:
+        id: q00gpcbnsb2os
+  /transunion-consumer-credit-report-v2:
+    post:
+      tags:
+        - Consumer Credit Reports
+      summary: Transunion Consumer Report
+      description: This API function is to allow activated clients the ability to pull a Transunion consumer credit report. Please see Extended Documenation for further detailed explanations of how to use this service.
+      operationId: transunionCreditReportV2
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - addressLine1
+                - addressLine2
+                - 'consumer_details[enquirerContactName]'
+                - enquiryReason
+                - firstName
+                - idNumber
+                - lastName
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                idNumber:
+                  type: string
+                  description: Consumers 13 Digit ID Number
+                firstName:
+                  type: string
+                  description: Consumers First name
+                lastName:
+                  type: string
+                  description: Consumers Surname
+                addressLine1:
+                  type: string
+                  description: Consumers Address Line1
+                addressLine2:
+                  type: string
+                  description: Consumers Address Line 2
+                'consumer_details[enquirerContactName]':
+                  type: string
+                  description: Person/Company name making the enquiry
+                enquiryReason:
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result={AddressNA08={AddressNA08=[{ConsumerNo=000000000000, InformationDate=20220608, Line1=10389, Line2=, Suburb=MEERSEE, City=RICHARDS BAY, PostalCode=3901, ProvinceCode=KN, Province=KWA-ZULU NATAL, AddressPeriod=00, OwnerTenant=, AddressChanged=Y}, {ConsumerNo=000000000000, InformationDate=20230925, Line1=GLOUCESTER, Line2=HENDRED ST, Suburb=BOTHASIG, City=CAPE TOWN, PostalCode=7441, ProvinceCode=WC, Province=WESTERN CAPE, AddressPeriod=00, OwnerTenant=, AddressChanged=Y}, {ConsumerNo=000000000000, InformationDate=20230904, Line1=1 ILLOVO MEWS, Line2=, Suburb=, City=CAPE TOWN, PostalCode=8001, ProvinceCode=WC, Province=WESTERN CAPE, AddressPeriod=00, OwnerTenant=, AddressChanged=Y}, {ConsumerNo=000000000000, InformationDate=20221030, Line1=9212 MACKAREL ST, Line2=, Suburb=MEERSEE, City=RICHARDS BAY, PostalCode=3901, ProvinceCode=KN, Province=KWA-ZULU NATAL, AddressPeriod=00, OwnerTenant=, AddressChanged=Y}]}, FICO6_07={ConsumerNo=000000000000, EmpiricaScore=00771, ExclusionCode=, ExclusionCodeDescription=, ReasonCode={string=[17, 69, 23, 05]}, ReasonDescription={string=[Number of recent enquiries, Too few accounts with recent payment information, Number of accounts now paid as agreed, Amount owed on accounts]}, ExpansionScore=, ExpansionScoreDescription=, EmpiricaVersion=AO6.0}, AKANamesNK04={AKANamesNK04=[{RecordSeq=01, Part=001, PartSeq=01, ConsumerNo=0000000, InformationDate=20231002, AKAName=GERT,S}, {RecordSeq=02, Part=001, PartSeq=01, ConsumerNo=0000000, InformationDate=20220311, AKAName=HARMSE HERMA}, {RecordSeq=03, Part=001, PartSeq=01, ConsumerNo=0000000, InformationDate=20171029, AKAName=KRIEL}]}, ConsEnqTransInfo0102={DefiniteMatchCount=1, PossibleMatchCount=00, MatchedConsumerNo=000000000000, PossibleConsumerNo=[], PossibleAdverseIndicator=[]}, ConsumerInfoNO05={RecordSeq=01, Part=001, PartSeq=01, ConsumerNo=0000000, Surname=TESTER, Forename1=JOE, Forename2=HERMANUS, Forename3=, Title=ADV, Gender=M, NameInfoDate=20230925, DateOfBirth=19540820, IdentityNo1=5408200000088, IdentityNo2=, MaritalStatusCode=C, MaritalStatusDesc=COMMUNITY OF PROPERTY, Dependants=00, SpouseName1=, SpouseName2=, TelephoneNumbers=H(035)7531652 B(035)7511363, DeceasedDate=00000000, CellNumber=000000823089995, EMail=}, ConsumerTelephoneHistoryNW01={ConsumerNo=000000000000, WorkNumbers={PhoneNumber=[{AreaCode=035, Number=7510000, Date=20230819, Years=0021}, {AreaCode=035, Number=7510001, Date=20150224, Years=0000}, {AreaCode=035, Number=7510002, Date=20110420, Years=0007}]}, HomeNumbers={PhoneNumber=[{AreaCode=035, Number=7530000, Date=20150521, Years=0004}, {AreaCode=021, Number=7530001, Date=20100821, Years=0000}, {AreaCode=035, Number=7530002, Date=20100412, Years=0000}]}, CellNumbers={PhoneNumber=[{Number=00000000000823080000, Date=20230904, Years=0000}, {Number=00000000000823080001, Date=20230819, Years=0019}, {Number=00000000000823080002, Date=20150521, Years=0000}]}}, EvolutionPO01={EvolutionPO01=[{ConsumerNo=000000000000, Lastupdatedate=20230819, SupplierName=FNB FUSION, NLRSACRRAAccount=CPA, IndustryCode=CC, Industry=Credit and Garage Cards, AccountTypeCode=E, AccountType=Single Credit Facility, AccountNumber=32845280000041169, SubAccountNumber=Q3, BranchCode=1057, SupplierReferencenumber=00000000, DateOpened=19940519, OpeningBalance=000005000, Instalment=000000000, CurrentBalance=000000000, Terms=0000, OverdueAmount=000000000, OwnershipType=00, NumberParticipantsJointLoan=00, PaymentType=00, RepaymentFrequency=03, LoanReasonCode=O, LoanReasonCodeDescription=OTHER, DeferredPaymentDate=00000000, AccSoldTo3rdParty=00, ThirdPartyName=, EvolutionPaymentHistory={EvolutionPaymentHistory=[{PaymentHistoryDate=202310, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202309, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202308, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202307, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202306, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202305, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202304, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202303, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202302, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202301, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202212, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202211, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202210, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202209, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202208, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202207, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202206, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202205, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202204, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202203, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202202, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202201, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202112, StatusCode=P, LastPayDate=20210727}, {PaymentHistoryDate=202111, StatusCode=P, LastPayDate=20210727}]}}, {ConsumerNo=000000000000, Lastupdatedate=20230811, SupplierName=FNB CREDIT CARD, NLRSACRRAAccount=CPA, IndustryCode=CC, Industry=Credit and Garage Cards, AccountTypeCode=C, AccountType=Credit Card, AccountNumber=4117101002695000, SubAccountNumber=, BranchCode=, SupplierReferencenumber=00000000, DateOpened=20131016, OpeningBalance=000010000, Instalment=000000000, CurrentBalance=000000000, Terms=0000, OverdueAmount=000000000, OwnershipType=00, NumberParticipantsJointLoan=00, PaymentType=0, RepaymentFrequency=03, LoanReasonCode=, LoanReasonCodeDescription=, DeferredPaymentDate=00000000, AccSoldTo3rdParty=00, ThirdPartyName=, EvolutionPaymentHistory={EvolutionPaymentHistory=[{PaymentHistoryDate=202310, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202309, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202308, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202307, StatusCode=P, LastPayDate=20230731}, {PaymentHistoryDate=202306, StatusCode=P, LastPayDate=20230630}, {PaymentHistoryDate=202305, StatusCode=P, LastPayDate=20230516}, {PaymentHistoryDate=202304, StatusCode=P, LastPayDate=20230428}, {PaymentHistoryDate=202303, StatusCode=P, LastPayDate=20230331}, {PaymentHistoryDate=202302, StatusCode=P, LastPayDate=20230225}, {PaymentHistoryDate=202301, StatusCode=P, LastPayDate=20230130}, {PaymentHistoryDate=202212, StatusCode=P, LastPayDate=20221203}, {PaymentHistoryDate=202211, StatusCode=P, LastPayDate=20221128}, {PaymentHistoryDate=202210, StatusCode=P, LastPayDate=20221031}, {PaymentHistoryDate=202209, StatusCode=P, LastPayDate=20220926}, {PaymentHistoryDate=202208, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202207, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202206, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202205, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202204, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202203, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202202, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202201, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202112, StatusCode=P, LastPayDate=20201130}, {PaymentHistoryDate=202111, StatusCode=P, LastPayDate=20201130}]}}, {ConsumerNo=0000000, Lastupdatedate=20230811, SupplierName=FNB CREDIT CARD, NLRSACRRAAccount=CPA, IndustryCode=CC, Industry=Credit and Garage Cards, AccountTypeCode=C, AccountType=Credit Card, AccountNumber=000000000000, SubAccountNumber=, BranchCode=, SupplierReferencenumber=00000000, DateOpened=19940624, OpeningBalance=000084280, Instalment=000000000, CurrentBalance=000000000, Terms=0000, OverdueAmount=000000000, OwnershipType=00, NumberParticipantsJointLoan=00, PaymentType=0, RepaymentFrequency=03, LoanReasonCode=, LoanReasonCodeDescription=, DeferredPaymentDate=00000000, AccSoldTo3rdParty=00, ThirdPartyName=, EvolutionPaymentHistory={EvolutionPaymentHistory=[{PaymentHistoryDate=202310, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202309, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202308, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202307, StatusCode=P, LastPayDate=20230729}, {PaymentHistoryDate=202306, StatusCode=0, LastPayDate=20230630}, {PaymentHistoryDate=202305, StatusCode=0, LastPayDate=20230516}, {PaymentHistoryDate=202304, StatusCode=0, LastPayDate=20230428}, {PaymentHistoryDate=202303, StatusCode=0, LastPayDate=20230331}, {PaymentHistoryDate=202302, StatusCode=P, LastPayDate=20230228}, {PaymentHistoryDate=202301, StatusCode=0, LastPayDate=20230131}, {PaymentHistoryDate=202212, StatusCode=0, LastPayDate=20221231}, {PaymentHistoryDate=202211, StatusCode=P, LastPayDate=20221130}, {PaymentHistoryDate=202210, StatusCode=0, LastPayDate=20221031}, {PaymentHistoryDate=202209, StatusCode=P, LastPayDate=20220930}, {PaymentHistoryDate=202208, StatusCode=0, LastPayDate=20220824}, {PaymentHistoryDate=202207, StatusCode=0, LastPayDate=20220729}, {PaymentHistoryDate=202206, StatusCode=0, LastPayDate=20220629}, {PaymentHistoryDate=202205, StatusCode=0, LastPayDate=20220530}, {PaymentHistoryDate=202204, StatusCode=0, LastPayDate=20220429}, {PaymentHistoryDate=202203, StatusCode=0, LastPayDate=20220331}, {PaymentHistoryDate=202202, StatusCode=0, LastPayDate=20220226}, {PaymentHistoryDate=202201, StatusCode=0, LastPayDate=20220131}, {PaymentHistoryDate=202112, StatusCode=0, LastPayDate=20211230}, {PaymentHistoryDate=202111, StatusCode=0, LastPayDate=20211130}]}}, {ConsumerNo=000000000000, Lastupdatedate=20230816, SupplierName=FNB REVOLVING CREDIT PLAN, NLRSACRRAAccount=CPA, IndustryCode=PL, Industry=Bank Personal Loans, AccountTypeCode=Z, AccountType=Revolving Non Store Card, AccountNumber=000000000000, SubAccountNumber=, BranchCode=, SupplierReferencenumber=00000000, DateOpened=20121008, OpeningBalance=000090000, Instalment=000000000, CurrentBalance=000000000, Terms=0048, OverdueAmount=000000000, OwnershipType=00, NumberParticipantsJointLoan=00, PaymentType=00, RepaymentFrequency=03, LoanReasonCode=, LoanReasonCodeDescription=, DeferredPaymentDate=00000000, AccSoldTo3rdParty=00, ThirdPartyName=, EvolutionPaymentHistory={EvolutionPaymentHistory=[{PaymentHistoryDate=202310, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202309, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202308, StatusCode=P, LastPayDate=20230301}, {PaymentHistoryDate=202307, StatusCode=P, LastPayDate=20230301}, {PaymentHistoryDate=202306, StatusCode=P, LastPayDate=20230301}, {PaymentHistoryDate=202305, StatusCode=P, LastPayDate=20230301}, {PaymentHistoryDate=202304, StatusCode=P, LastPayDate=20230301}, {PaymentHistoryDate=202303, StatusCode=P, LastPayDate=20230301}, {PaymentHistoryDate=202302, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202301, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202212, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202211, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202210, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202209, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202208, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202207, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202206, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202205, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202204, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202203, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202202, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202201, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202112, StatusCode=P, LastPayDate=20130301}, {PaymentHistoryDate=202111, StatusCode=P, LastPayDate=20130301}]}}, {ConsumerNo=000000000000, Lastupdatedate=20230815, SupplierName=OLD MUTUAL INSURE, NLRSACRRAAccount=CPA, IndustryCode=IN, Industry=Insurance, AccountTypeCode=S, AccountType=Short Term Insurance, AccountNumber=000000000000, SubAccountNumber=, BranchCode=, SupplierReferencenumber=00000000, DateOpened=20030301, OpeningBalance=000000000, Instalment=000004237, CurrentBalance=000004237, Terms=0000, OverdueAmount=000000000, OwnershipType=00, NumberParticipantsJointLoan=00, PaymentType=00, RepaymentFrequency=03, LoanReasonCode=, LoanReasonCodeDescription=, DeferredPaymentDate=00000000, AccSoldTo3rdParty=00, ThirdPartyName=, EvolutionPaymentHistory={EvolutionPaymentHistory=[{PaymentHistoryDate=202310, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202309, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202308, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202307, StatusCode==, LastPayDate=00000000}, {PaymentHistoryDate=202306, StatusCode=0, LastPayDate=20230524}, {PaymentHistoryDate=202305, StatusCode=0, LastPayDate=20230420}, {PaymentHistoryDate=202304, StatusCode=0, LastPayDate=20230324}, {PaymentHistoryDate=202303, StatusCode=0, LastPayDate=20230221}, {PaymentHistoryDate=202302, StatusCode=0, LastPayDate=20230124}, {PaymentHistoryDate=202301, StatusCode=0, LastPayDate=20221222}, {PaymentHistoryDate=202212, StatusCode=0, LastPayDate=20221123}, {PaymentHistoryDate=202211, StatusCode=0, LastPayDate=20221024}, {PaymentHistoryDate=202210, StatusCode=0, LastPayDate=20220923}, {PaymentHistoryDate=202209, StatusCode=0, LastPayDate=20220824}, {PaymentHistoryDate=202208, StatusCode=0, LastPayDate=20220722}, {PaymentHistoryDate=202207, StatusCode=0, LastPayDate=20220623}, {PaymentHistoryDate=202206, StatusCode=0, LastPayDate=20220524}, {PaymentHistoryDate=202205, StatusCode=0, LastPayDate=20220421}, {PaymentHistoryDate=202204, StatusCode=0, LastPayDate=20220324}, {PaymentHistoryDate=202203, StatusCode=0, LastPayDate=20220221}, {PaymentHistoryDate=202202, StatusCode=0, LastPayDate=20220124}, {PaymentHistoryDate=202201, StatusCode=0, LastPayDate=20211223}, {PaymentHistoryDate=202112, StatusCode=0, LastPayDate=20211123}, {PaymentHistoryDate=202111, StatusCode=0, LastPayDate=20211022}]}}]}, EvolutionCC01={EvolutionCC01={ConsumerNo=000000000000, Curr_own_enq=002, prev_own_enq=000, Curr_other_enq=003, prev_other_enq=000, Curr_jdgmnt=000, prev_jdgmnt=000, other_jdgmnt=000, Curr_notices=000, prev_notices=000, other_notices=000, Curr_default=000, prev_default=000, Curr_trace_alerts=000, prev_trace_alerts=000, active_accounts=005, curr_positive_loans=000, curr_higest_mia=000, prev_positive_accounts=000, prev_higest_mia=000, closed_accounts=000, adverse_accounts=000, mnths_in_arrears=000, curr_balance=000004237, curr_monthly_installment=000004237, cummulative_arrears_amount=000000000, filler=}}, EvolutionEN01={EvolutionEN01=[{ConsumerNo=000000000000, date_of_enquiry=20231002, enq_subscriber_name=Datanamix, enq_subscriber_contact=Datanamix - N/A 0108235194, enq_type_cd=45, enq_type_desc=OTHER, own_account=Y, loan_reason_cd=, loan_reason_desc=, enq_ref_no=00000000000, industry_cd=OT, industry_desc=Other, message=}, {ConsumerNo=000000000000, date_of_enquiry=20230925, enq_subscriber_name=Woolworths financial serv, enq_subscriber_contact=Woolworths Financial Service 01411534, enq_type_cd=32, enq_type_desc=CREDIT APPLICATION, own_account=N, loan_reason_cd=, loan_reason_desc=, enq_ref_no=00000000000, industry_cd=CL, industry_desc=Clothing, message=}, {ConsumerNo=000000000000, date_of_enquiry=20230918, enq_subscriber_name=Datanamix, enq_subscriber_contact=Datanamix (2018/528728/07) 0108235194, enq_type_cd=45, enq_type_desc=OTHER, own_account=Y, loan_reason_cd=, loan_reason_desc=, enq_ref_no=00000000000, industry_cd=OT, industry_desc=Other, message=}]}, EchoData0001={SubscriberCode=93012, ClientReference=, BranchNumber=, BatchNumber=}, EmploymentNM04={EmploymentNM04=[{RecordSeq=01, Part=001, PartSeq=01, ConsumerNo=000000000000, InformationDate=20230925, Occupation=, EmployerName=FICO, EmploymentPeriod=00}, {RecordSeq=02, Part=001, PartSeq=01, ConsumerNo=000000000000, InformationDate=20230819, Occupation=EMPLOYED SALARY EA, EmployerName=PHO, EmploymentPeriod=01}, {RecordSeq=03, Part=001, PartSeq=01, ConsumerNo=000000000000, InformationDate=20230819, Occupation=EMPLOYED  SALARY EA, EmployerName=PHO, EmploymentPeriod=02}]}, NLRConfirmationMR01={ConsumerNo=000000000, NLREnquiryRefNo=00000000000, NLRLoanRegNo=}, V1Segment={v1Segs={v1Seg=[{Code=V1, Value=01}, {Code=00, Value=01}, {Code=01, Value=02}, {Code=B7, Value=01}, {Code=CC, Value=01}, {Code=D7, Value=01}, {Code=DC, Value=01}, {Code=DI, Value=01}, {Code=EN, Value=01}, {Code=F6, Value=07}, {Code=MR, Value=01}, {Code=NA, Value=08}, {Code=NJ, Value=07}, {Code=NK, Value=04}, {Code=NM, Value=04}, {Code=NN, Value=08}, {Code=NO, Value=05}, {Code=NT, Value=07}, {Code=NW, Value=01}, {Code=PO, Value=01}]}}}}'
+      x-stoplight:
+        id: fxwmbwws4rvnv
+  /pbverify-bank-account-verification-v3:
+    post:
+      tags:
+        - Bank Account Verification
+      summary: Create Account Verification
+      description: 'The Real-Time – Account (Holder) Verification Service (AVS-R) is a function catering to the verification of the match of the identification number and bank account number of an individual or a business with the account details stored within the bank’s database. Currently, the major South African Banks provide this service, in one form or another, to their respective clients. Datanamix provides a platform that allows for the verification of accounts across all participating banks, in a uniform process. The Real-Time AVS-R service returns a response from the bank between 10 seconds and 30 seconds depending on the bank. Available banks: ABSA, African Bank, Access Bank, Bidvest Bank (Business Only), Capitec, Discovery Bank, Finbond Mutual Bank, FNB, Grindrod Bank, Investec, Mercantile Bank (Business Only), Nedbank, Sasfin, Standard Bank, Tyme Bank'
+      operationId: pbverifyBankAccountVerificationV3
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'bvs_details[accountNumber]'
+                - 'bvs_details[accountType]'
+                - 'bvs_details[branchCode]'
+                - 'bvs_details[idNumber]'
+                - 'bvs_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'bvs_details[accountNumber]':
+                  type: string
+                  description: Account number to be verified.
+                'bvs_details[idNumber]':
+                  type: number
+                  description: |-
+                    The ID number field can accept the following parameters:
+                    • Valid South African ID Number.
+                    • Valid Passport Number.
+                    • Valid Company Registration Number.
+                    o On Company Reg Number, remove all the “\” or “/”
+                    • Valid Estate Number.
+                'bvs_details[accountType]':
+                  type: string
+                  description: |-
+                    Account type:
+                    01 - current / cheque account
+                    02 - savings account
+                    03 - transmission account
+                    04 - bond account
+                    06 - subscription share
+                    00 - if this is not known.
+                'bvs_details[branchCode]':
+                  type: string
+                  description: The branch code where the account number is held.
+                'bvs_details[initial]':
+                  type: string
+                  description: |-
+                    A private individual’s initials
+                    • Upper case
+                    • Optional field, can be left blank.
+                'bvs_details[lastname]':
+                  type: string
+                  description: |-
+                    This can be:
+                    • Surname of a private individual;
+                    • Company name;
+                    • Estate name,
+                    corresponding to the value supplied in the ID number field
+                    • Upper case
+                    • Optional field, can be left blank.
+                'bvs_details[phoneNumber]':
+                  type: string
+                  description: |-
+                    Cell number to be verified as supplied by Client
+                    • Optional field, can be left blank
+                    • Cell number needs to be formatted as follows:
+                    “270812345678”.
+                'bvs_details[emailAddress]':
+                  type: string
+                  description: |-
+                    Email address to be verified as supplied by Client
+                    • Optional field, can be left blank
+                'bvs_details[yourReference]':
+                  type: string
+                  description: A reference provided by the Client to identify the transaction on the Client’s LOB system
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Message=00001 Transaction sent to the bank. Waiting for feedback, jobID=934915}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@datanamix.com'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+      x-stoplight:
+        id: xerforiiw120w
+  /pbverify-bank-account-verification-job-status-v3:
+    post:
+      tags:
+        - Bank Account Verification
+      summary: Retrieve Verification Status
+      description: 'This API service is used with the response from the Bank Account Verification V3 API, you will receive a JobID in the result of the verification which will be used to check on the status of the bank account verification. Please see Extended Documentation for further detailed explanations of how to use this service.'
+      operationId: pbverifyBankAccountVerificationJobStatusV3
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - jobID
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                jobID:
+                  type: string
+                  description: JobID returned from the bank account verification V3 API
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Message=, AVS={operator=MEMBERKEY, accountNumber=62373088888, accountType=01, branchCode=250648, idNumber=7905015888888, initials=J, lastName=Goofy, phoneNumber=, emailAddress=, userReference=Testing, accountExists=00, accountIdMatch=00, initialMatch=00, lastNameMatch=00, accountOpen=00, accountAcceptsCredits=, accountAcceptsDebits=00, accountOpenGtThreeMonths=00, phoneValid=00, emailValid=99, accountTypeValid=00, transactionReference=934826, captureDate=2020-10-07-06.42.24.935000}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+      x-stoplight:
+        id: t1pzix68ber7o
+  /pbverify-phone-identity:
+    post:
+      tags:
+        - 'Phone ID, Score and SIM Swap'
+      summary: Phone number profiling
+      description: 'The PhoneID API is a REST API that provides a cleansed phone number, phone type, and telecom carrier information that can be used to determine which phone numbers are a potential fraud risk, and what the best communication method for a phone number is (voice, SMS).'
+      operationId: phoneID
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - countryCode
+                - memberkey
+                - password
+                - phoneNumber
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: pbVerify given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                phoneNumber:
+                  type: string
+                  description: 'Phone number for ID check, including country code. Eg. 27721234567'
+                countryCode:
+                  type: string
+                  description: Enter country code with no special characters or space. Eg. 27
+                'consumer_details_addon[sim_swap]':
+                  type: boolean
+                  description: Returns the SIM swap status of a contact
+                  default: false
+                  enum:
+                    - false
+                    - true
+                'consumer_details_addon[contact]':
+                  type: boolean
+                  description: Returns identity insight for contact if available
+                  default: false
+                  enum:
+                    - false
+                    - true
+                'consumer_details_addon[porting_history]':
+                  type: boolean
+                  description: Returns historic porting data for contact
+                  default: false
+                  enum:
+                    - false
+                    - true
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{reference_id=F0123456789ABCDEF0123456789ABCDE, status={updated_on=2015-10-03T14:51:28.709526Z, code=300, description=Transaction successfully completed}, location={city=Los Angeles, state=CA, zip=90066, metro_code=4480, county=Los Angeles County, country={name=United States, iso2=US, iso3=USA}, coordinates={latitude=33.99791, longitude=-118.42302}, time_zone={name=America/Los_Angeles, utc_offset_min=-8, utc_offset_max=-8}}, contact={address1=2432 CHIMNEY POINT LN, address2=, address3=, address4=, city=LEXINGTON, country=, first_name=MYLA, last_name=JONES, state_province=KY, status={code=2800, description=Request successfully completed}, zip_postal_code=40509, email_address=email@acme.com}, sim_swap={swap_date=2018-09-05, swap_time=22:00:00, risk_indicator=1, status={code=2800, description=Request successfully completed}}, numbering={original={complete_phone_number=15555551234, country_code=1, phone_number=5555551234}, cleansing={call={country_code=1, phone_number=5555551234, cleansed_code=100, min_length=10, max_length=10}, sms={country_code=1, phone_number=5555551234, cleansed_code=100, min_length=10, max_length=10}}}, phone_type={code=1, description=FIXED_LINE}, blocklisting={block_code=0, block_description=Not blocked, blocked=false}, carrier={name=Verizon}, porting_history={carrier_current=Sprint Spectrum, L.P., carrier_previous=US Cellular Corp., mcc_carrier_current=310, mcc_carrier_previous=310, mnc_carrier_current=120, mnc_carrier_previous=160, phone_type_current=MOBILE, phone_type_previous=MOBILE, port_date=2018-08-26T16:33:19Z, number_of_portings=1, status={code=2800, description=Request successfully completed}}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@pbverify.co.za'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+  /pbverify-phone-score:
+    post:
+      tags:
+        - 'Phone ID, Score and SIM Swap'
+      summary: Phone Score
+      description: 'Datanamix''s Phone Score API is like a credit check for phone numbers. When you submit a phone number to the Score API, the phone number is evaluated and a score is returned telling you how risky that user is.'
+      operationId: phoneScore
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - memberkey
+                - password
+                - phoneNumber
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: pbVerify given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                phoneNumber:
+                  type: string
+                  description: 'Enter the phone number you want a score for, including the country code but with no special characters or space'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{reference_id=B567DC5D1180011C8952823CF6B40773, status={updated_on=2017-02-01T00:33:34.860418Z, code=300, description=Transaction successfully completed}, numbering={original={complete_phone_number=15555551212, country_code=1, phone_number=5555551212}, cleansing={call={country_code=1, phone_number=5555551212, cleansed_code=105, min_length=10, max_length=10}, sms={country_code=1, phone_number=5555551212, cleansed_code=105, min_length=10, max_length=10}}}, phone_type={code=8, description=INVALID}, location={city=Countrywide, country={name=United Kingdom, iso2=GB, iso3=GBR}, coordinates={}, time_zone={utc_offset_min=0, utc_offset_max=0}}, carrier={name=Telefonica UK Limited}, risk={level=high, recommendation=block, score=959}, risk_insights={status=800, category=[10002], a2p=[20001, 20101, 21002], p2p=[30004, 30101, 30201, 30302, 31008], number_type=[40005, 40011], ip=[50001, 50004], email=[60003, 60006]}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@pbverify.co.za'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+  /pbverify-contact-to-id:
+    post:
+      tags:
+        - Contact to ID Number
+      summary: Get ID Number from Contact Number
+      description: 'This API service provides an efficient and fast way to obtain the last 6 known South African identities associated to a South African contact number EG: Landline 012 2215554 or mobile 082 333 6666 number as search criteria.'
+      operationId: contactToId
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[contactNumber]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: pbVerify given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[contactNumber]':
+                  type: string
+                  description: Consumers 10 Digit Contact Number
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Your Search Reference - Internal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, contactToId={Results=[{ID_NUMBER=09877087090987, FORENAME_1=JUST, FORENAME_2=, SURNAME=GOOF}, {ID_NUMBER=7865765786576, FORENAME_1=SAKIO, FORENAME_2=NIXON, SURNAME=MALATJI}, {ID_NUMBER=74567456745645, FORENAME_1=JUST, FORENAME_2=FRED, SURNAME=LONGONE}, {ID_NUMBER=345234523452345, FORENAME_1=GUMMY, FORENAME_2=, SURNAME=BEAR}]}}'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Input values expected
+        '401':
+          description: Authentication credentials invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Authentication error, please check your memberkey and password and try again'
+        '402':
+          description: Not sufficient funds to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: Insufficient funds or Account Limit reached
+        '403':
+          description: Not authorized to perform action
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: 'Search Disabled, Please contact support @ support@pbverify.co.za'
+        '422':
+          description: Partial response content returned
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  Status: Failure
+                  Error: A relevant message explaining the error
+  /ofac-sanction-list-v3:
+    post:
+      tags:
+        - AML Sanctions and PEP
+      summary: Basic - Sanctions Search
+      description: OFAC Sanctions List Search V3
+      operationId: ofac-sanction-list-v3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - memberkey
+                - name
+                - password
+                - threshold
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: pbVerify given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                threshold:
+                  type: integer
+                  description: The minimum match score 0-100
+                  format: int32
+                  default: 80
+                name:
+                  type: string
+                  description: The name of the individual/entity/vessel being queried
+                passportNumber:
+                  type: string
+                  description: Passport number
+                dob:
+                  type: string
+                  description: Date Of Birth
+                address1:
+                  type: string
+                  description: Address line 1
+                address2:
+                  type: string
+                  description: Address line 2
+                city:
+                  type: string
+                  description: City
+                country:
+                  type: string
+                  description: Country name
+                cryptoAddress:
+                  type: string
+                  description: The crypto address
+                email:
+                  type: string
+                  description: The email
+                phone:
+                  type: string
+                  description: Phone number
+        required: true
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{error=string, errorMessage=string, searchTerm=string, sourcesUsed=[{source=string}], matches=[{source=string, name=string, dob=string, gender=string, score=string, sdnType=string, remarks=string, uid=string, addresses=[{uid=string, address1=string, city=string, postalCode=string, country=string}], citizenship=[{string=string}], programs=[], akas=[{uid=string, category=string, lastName=string}], passports=[{passport=string, passportCountry=string}], additionalSanctions=[string]}]}'
+  /sanctions-io-search:
+    post:
+      tags:
+        - AML Sanctions and PEP
+      summary: Standard - Sanctions Search
+      description: Allows searches against Sanctions Lists and Crime Data. Please be aware that over-defining your search requests (using multiple search fields in addition to the name field) can lead to false negatives (not matching an actual existing record).
+      operationId: santionsIoSearch
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - memberkey
+                - name
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                name:
+                  type: string
+                  description: Name of a person or entity.
+                  format: string
+                min_score:
+                  maximum: 100
+                  minimum: 1
+                  type: number
+                  description: 'Filter setting for the confidence score (1 to 100, default is 75). All search results with a score lower than this will be filtered out in the api response.'
+                entity_type:
+                  type: string
+                  description: 'Type of entity (individual, entity, vessel, aircraft).'
+                  default: individual
+                  enum:
+                    - individual
+                    - entity
+                    - vessel
+                    - aircraft
+                nationality:
+                  type: string
+                  description: Limits the search to the provided nationality (the data format needs to be in ISO2).
+                citizenship:
+                  type: string
+                  description: Limits the search to the provided citizenship (format ISO2).
+                country_residence:
+                  type: string
+                  description: Country (ISO2) found in the address field of the information in the sanctions list.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result=[{name=Chan Juan, alt_names=[Chan John], email=this@that.com,other@domain.com, data_source=CAP, si_identifier=CAP-UKRAINEEO13660-190175, data_hash=TUQ2F8J+hUhrp12346/AbAFSkabuKdG2qnMNz5H6WFI=, entity_number=190175, type=Individual, programs=[UKRAINE-EO13660], title=Dr., addresses=[75006 PARIS Île-de-France FR], start_date=2005-06-24, remarks=Chan Juan is currently a citizen of France., citizenship=[FR], nationality=[FR], date_of_birth=[1996-30-12], wallet_address=[82pE31FzKSQpvXXHfMzfMe329BcsZoMNQ3 - XBT, 0x8578c62f913538f6acc5c05d6ce4e49bf65bdf0c - ETH], place_of_birth=[75006 PARIS Île-de-France FR], source_list_url=http://posuere.vivaz.gov/dignissim, source_information_url=http://neque.mattis.edu/et}], Count=1}'
+  /sanctions-io-pep-search:
+    post:
+      tags:
+        - AML Sanctions and PEP
+      summary: Standard - PEP Search
+      description: This endpoint allows searches against our PEP database.
+      operationId: santionsIoPepSearch
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - memberkey
+                - name
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                name:
+                  type: string
+                  description: Name we are looking for.
+                  format: string
+                fuzziness:
+                  maximum: 100
+                  minimum: 0
+                  type: number
+                  description: 'Level of fuzziness (or inverse of resembleness) the name provided to the name in the system, with a 0 to be exact and 100 completelly different. Recomended bigger than 30 and lower than 70. if now provided it will default to 85.'
+                  default: 85
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result=[{name=Barack Hussein, OBAMA, reason=USA: White House: President (ex), dates_of_birth=[1961], entity_number=1686872, score=100, source=PEP, remarks=American politician and attorney who served as the 44th president of the United States from 2009 to 2017, start_date=2012-04-02, entity_type=Individual, citizenships=[US], nationalities=[US]}], Count=1}'
+  /world-compliance-aml-screening-consumer-match:
+    post:
+      tags:
+        - AML Sanctions and PEP
+      summary: 'Premium - AML, PEP and AM Search'
+      description: World Compliance AML Check
+      operationId: world-compliance-aml-screening-consumer-match
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[lastname]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                isPassport:
+                  type: boolean
+                  description: Indicate whether the idNumber input is a passport number
+                  default: false
+                  enum:
+                    - false
+                    - true
+                'consumer_details[idNumber]':
+                  type: string
+                  description: Consumers South African ID number/Passport
+                'consumer_details[firstInitial]':
+                  type: string
+                  description: Consumers first name
+                'consumer_details[lastname]':
+                  type: string
+                  description: Consumer lastname
+                'consumer_details[birthDate]':
+                  type: string
+                  description: Consumer birth date
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Reference for personal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result={ConsumerDetails={ConsumerID=0, FirstName=john, SecondName=[], ThirdName=[], Surname=Doe, IDNo=[], PassportNo=[], BirthDate=2020-05-19T08:02:22.3532627+02:00, GenderInd=M, BonusXML=[], TempReference=[], EnquiryID=58725832, EnquiryResultID=60646233, Reference=Testing}}}'
+  /world-compliance-aml-screening-consumer-results:
+    post:
+      tags:
+        - AML Sanctions and PEP
+      summary: 'Premium - AML, PEP and AM Result'
+      description: World Compliance AML Check
+      operationId: world-compliance-aml-screening-consumer-results
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - 'consumer_details[EnquiryID]'
+                - 'consumer_details[EnquiryResultID]'
+                - 'consumer_details[yourReference]'
+                - memberkey
+                - password
+              type: object
+              properties:
+                memberkey:
+                  type: string
+                  description: Datanamix given memberkey
+                password:
+                  type: string
+                  description: API Password Key
+                  format: password
+                'consumer_details[EnquiryID]':
+                  type: string
+                  description: EnquiryID - returned from the Consumer Match Function
+                'consumer_details[EnquiryResultID]':
+                  type: string
+                  description: EnquiryResultID - returned from the Consumer Match Function
+                'consumer_details[yourReference]':
+                  type: string
+                  description: Reference for personal use
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{Status=Success, Result={ID=3895370633, EntityType=Individual, EntityName=Bennett, Sean, EntityUniqueID=WX0010419111, ResultDate=2020-05-19 06:02:48 AM, DateListed=2019-12-18, Gender=Male, BestNameScore=100, ReasonListed=Adverse Media:Drug Trafficking, ListReferenceNumber=10419111, Comments=Source: International,Website || Offense: Charged with drug trafficking - December, 2019. || Category: Adverse Media | Subcategory: Drug Trafficking || Last updated: 2019-12-18 || Profile Notes: According to the winnipeg.ca; December 17, 2019: In December, 2019, Sean Bennett of Winnipeg, was charged with Carrying Concealed Weapon Prohibited Device or Ammunition, Fail to Comply Condition Recognizance x 9, Possess Firearm Knowing its Possession is Unauthorized, Possess Firearm Knowing Serial Number Has Been Tampered With, Possess Loaded Prohibited or Restricted Firearm, Possess Scheduled Substance for the Purpose of Trafficking - Cocaine x 2, Possess Proceeds of Property Obtained by Crime Over CAD 5,000, Possess Firearm, Restricted/Prohibited Weapon or Ammunition Contrary to Prohibition Order x 2 and Theft Under CAD 5,000. During the investigation police seized 137 grams of cocaine - street value CAD 9,000, 20 grams of crack cocaine - street value CAD 1,500, 221 OxyNeo 40mgs - street value CAD 8,840, a small quantity of unknown powder, A small quantity of unknown liquid, A loaded 9-mm handgun, 9-mm ammunition, Sawed off .22 calibre rifle, .22 caliber ammunition, Shotgun shells, 5 cell phones and Approximately CAD 7,600 in Canadian currency., AdditionalInfo=[{Type=DOB, Value=1973, Comment=[]}, {Type=DOB, Value=1972, Comment=[]}, {Type=Other, Value=Link to WorldCompliance Online Database, Comment=Bennett, Sean | https://members.worldcompliance.com/metawatch2.aspx?id=ec7db630-a40f-48cc-9f43-438a54606e48}, {Type=Other, Value=Sources of Record Information, Comment=https://globalnews.ca/news/6307656/drugs-guns-cash-seized-winnipeg-windsor-hotel/ | https://winnipeg.ctvnews.ca/police-seize-guns-and-drugs-after-three-separate-incidents-at-windsor-hotel-1.4733847?cache=yes%3FclipId%3D375756 | https://winnipeg.ca/police/press/2019/12dec/2019_12_17.aspx}]}}'
+components: {}
+x-stoplight:
+  id: nkiomx6qde8ri
+x-internal: false
